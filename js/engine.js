@@ -48,9 +48,15 @@ class TypingEngine {
       'q': 'KeyQ', 'r': 'KeyR', 's': 'KeyS', 't': 'KeyT',
       'u': 'KeyU', 'v': 'KeyV', 'w': 'KeyW', 'x': 'KeyX',
       'y': 'KeyY', 'z': 'KeyZ',
-      ';': 'Semicolon', ':': 'Semicolon', '=': 'Equal',
+      // Numbers & Symbols
+      '0': 'Digit0', '1': 'Digit1', '2': 'Digit2', '3': 'Digit3', '4': 'Digit4',
+      '5': 'Digit5', '6': 'Digit6', '7': 'Digit7', '8': 'Digit8', '9': 'Digit9',
+      ';': 'Semicolon', ':': 'Semicolon', '=': 'Equal', '+': 'Equal',
+      '-': 'Minus', '_': 'Minus', '[': 'BracketLeft', ']': 'BracketRight',
+      '{': 'BracketLeft', '}': 'BracketRight',
       '(': 'Digit9', ')': 'Digit0', '>': 'Period', '<': 'Comma',
-      '"': 'Quote', "'": 'Quote', '?': 'Slash'
+      '.': 'Period', ',': 'Comma', '/': 'Slash', '?': 'Slash',
+      '"': 'Quote', "'": 'Quote', '`': 'Backquote', '~': 'Backquote'
     };
   }
 

@@ -2,13 +2,14 @@
  * TypeMaster Academy | Main Application Controller & UI Orchestrator
  * ===================================================================
  * Binds virtual keyboard DOM events, text display spans, category tabs,
- * sound toggle, HUD telemetry, and completion modals.
+ * language switcher, full Dark Mode theming, HUD telemetry, and modals.
  * 
  * Author: Tareq Ali (@Tareq0001)
  */
 
 document.addEventListener('DOMContentLoaded', () => {
   const sound = new SoundEffectsEngine();
+  let currentLang = 'ar'; // 'ar' or 'en'
   let currentCategory = 'home_row_ar';
   let currentLessonIndex = 0;
 
@@ -28,10 +29,26 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnNextLesson = document.getElementById('btn-next-lesson');
   const btnRetryLesson = document.getElementById('btn-retry-lesson');
 
-  // Controls
+  // Controls & Toggles
+  const btnToggleTheme = document.getElementById('btn-toggle-theme');
+  const iconMoon = document.getElementById('icon-moon');
+  const iconSun = document.getElementById('icon-sun');
+  const themeLabel = document.getElementById('theme-label');
+
   const btnToggleSound = document.getElementById('btn-toggle-sound');
   const btnResetTyping = document.getElementById('btn-reset-typing');
-  const categoryPills = document.querySelectorAll('.category-pill');
+
+  // Language Tabs
+  const tabLangAr = document.getElementById('tab-lang-ar');
+  const tabLangEn = document.getElementById('tab-lang-en');
+  const categoryPillsContainer = document.getElementById('lesson-category-pills');
+
+  // Keyboard toolbar & elements
+  const virtualKeyboard = document.getElementById('virtual-keyboard');
+  const kbdStatusIcon = document.getElementById('kbd-status-icon');
+  const kbdStatusText = document.getElementById('kbd-status-text');
+  const btnKbdAr = document.getElementById('btn-kbd-ar');
+  const btnKbdEn = document.getElementById('btn-kbd-en');
 
   // Toast Helper
   const toastEl = document.getElementById('academy-toast');
@@ -43,22 +60,90 @@ document.addEventListener('DOMContentLoaded', () => {
     toastMsg.textContent = msg;
     toastEl.classList.add('show');
     if (toastTimer) clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2400);
+    toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2200);
   }
 
-  // Update UI callback from TypingEngine
+  // ==========================================================
+  // 1. DARK MODE / THEME ENGINE
+  // ==========================================================
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('typemaster_theme', theme);
+
+    if (theme === 'dark') {
+      if (iconMoon) iconMoon.style.display = 'none';
+      if (iconSun) iconSun.style.display = 'block';
+      if (themeLabel) themeLabel.textContent = 'الوضع الفاتح';
+      if (btnToggleTheme) btnToggleTheme.classList.add('active');
+    } else {
+      if (iconMoon) iconMoon.style.display = 'block';
+      if (iconSun) iconSun.style.display = 'none';
+      if (themeLabel) themeLabel.textContent = 'الوضع الداكن';
+      if (btnToggleTheme) btnToggleTheme.classList.remove('active');
+    }
+  }
+
+  // Initial Theme Load
+  const savedTheme = localStorage.getItem('typemaster_theme') || 'light';
+  applyTheme(savedTheme);
+
+  if (btnToggleTheme) {
+    btnToggleTheme.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      const nextTheme = current === 'dark' ? 'light' : 'dark';
+      applyTheme(nextTheme);
+      showToast(nextTheme === 'dark' ? 'تم تفعيل الوضع الداكن 🌙' : 'تم تفعيل الوضع الفاتح ☀️');
+    });
+  }
+
+  // ==========================================================
+  // 2. DEDICATED KEYBOARD LANGUAGE SWITCHER
+  // ==========================================================
+  function setKeyboardLanguage(lang) {
+    if (!virtualKeyboard) return;
+    virtualKeyboard.setAttribute('data-keyboard-lang', lang);
+
+    if (lang === 'ar') {
+      if (kbdStatusIcon) kbdStatusIcon.textContent = '🇸🇦';
+      if (kbdStatusText) kbdStatusText.textContent = 'لوحة المفاتيح: عربية بالكامل';
+      if (btnKbdAr) btnKbdAr.classList.add('active');
+      if (btnKbdEn) btnKbdEn.classList.remove('active');
+      if (textDisplayBox) textDisplayBox.style.direction = 'rtl';
+    } else {
+      if (kbdStatusIcon) kbdStatusIcon.textContent = '🇬🇧';
+      if (kbdStatusText) kbdStatusText.textContent = 'Keyboard: English Only (QWERTY)';
+      if (btnKbdAr) btnKbdAr.classList.remove('active');
+      if (btnKbdEn) btnKbdEn.classList.add('active');
+      if (textDisplayBox) textDisplayBox.style.direction = 'ltr';
+    }
+  }
+
+  if (btnKbdAr) {
+    btnKbdAr.addEventListener('click', () => {
+      setKeyboardLanguage('ar');
+      showToast('تم ضبط لوحة المفاتيح: عربية بالكامل 🇸🇦');
+    });
+  }
+
+  if (btnKbdEn) {
+    btnKbdEn.addEventListener('click', () => {
+      setKeyboardLanguage('en');
+      showToast('Keyboard mode: English Only 🇬🇧');
+    });
+  }
+
+  // ==========================================================
+  // 3. TYPING ENGINE BINDINGS
+  // ==========================================================
   const onUpdateUI = (metrics) => {
-    // 1. Update HUD
     if (hudWpm) hudWpm.innerHTML = `${metrics.wpm} <span>WPM</span>`;
     if (hudAccuracy) hudAccuracy.innerHTML = `${metrics.accuracy}%`;
     if (hudTime) hudTime.innerHTML = `${metrics.elapsedSeconds} <span>ث</span>`;
     if (hudErrors) hudErrors.innerHTML = `${metrics.incorrectCount}`;
 
-    // 2. Render Text Box Spans
     renderTextSpans();
   };
 
-  // Lesson Finished callback
   const onFinishLesson = (metrics) => {
     if (modalWpm) modalWpm.textContent = `${metrics.wpm} WPM`;
     if (modalAccuracy) modalAccuracy.textContent = `${metrics.accuracy}%`;
@@ -70,7 +155,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const engine = new TypingEngine(sound, onUpdateUI, onFinishLesson);
 
-  // Render character spans inside #text-display-box
   function renderTextSpans() {
     if (!textDisplayBox) return;
     textDisplayBox.innerHTML = '';
@@ -92,42 +176,98 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Load lesson
-  function loadCurrentLesson() {
-    const list = LESSON_DATABASE[currentCategory] || LESSON_DATABASE.home_row_ar;
-    const lesson = list[currentLessonIndex % list.length];
-    
-    // Update active category pill
-    categoryPills.forEach(p => {
-      if (p.getAttribute('data-category') === currentCategory) {
-        p.classList.add('active');
-      } else {
-        p.classList.remove('active');
-      }
+  // ==========================================================
+  // 4. LESSONS & CATEGORIES MANAGEMENT
+  // ==========================================================
+  function renderCategoryPills() {
+    if (!categoryPillsContainer) return;
+    categoryPillsContainer.innerHTML = '';
+
+    // Filter categories matching current language
+    const relevantKeys = Object.keys(LESSON_DATABASE).filter(key => {
+      return LESSON_DATABASE[key].lang === currentLang;
     });
+
+    if (!relevantKeys.includes(currentCategory)) {
+      currentCategory = relevantKeys[0] || 'home_row_ar';
+      currentLessonIndex = 0;
+    }
+
+    relevantKeys.forEach(catKey => {
+      const catData = LESSON_DATABASE[catKey];
+      const btn = document.createElement('button');
+      btn.className = `category-pill ${catKey === currentCategory ? 'active' : ''}`;
+      btn.setAttribute('data-category', catKey);
+      btn.textContent = catData.title;
+
+      btn.addEventListener('click', () => {
+        currentCategory = catKey;
+        currentLessonIndex = 0;
+        
+        // Ensure keyboard matches lesson language
+        setKeyboardLanguage(catData.lang);
+        renderCategoryPills();
+        loadCurrentLesson();
+        showToast(`تم اختيار: ${catData.title}`);
+      });
+
+      categoryPillsContainer.appendChild(btn);
+    });
+  }
+
+  function loadCurrentLesson() {
+    const catData = LESSON_DATABASE[currentCategory] || LESSON_DATABASE.home_row_ar;
+    const lessonList = catData.lessons || [];
+    const lesson = lessonList[currentLessonIndex % lessonList.length];
+
+    if (!lesson) return;
+
+    // Automatically sync keyboard to lesson language
+    setKeyboardLanguage(catData.lang);
 
     engine.loadLesson(lesson.text);
     renderTextSpans();
     if (textDisplayBox) textDisplayBox.focus();
   }
 
-  // Category Pill Listeners
-  categoryPills.forEach(pill => {
-    pill.addEventListener('click', () => {
-      currentCategory = pill.getAttribute('data-category');
+  // Language Tabs Click Listeners
+  if (tabLangAr) {
+    tabLangAr.addEventListener('click', () => {
+      currentLang = 'ar';
+      tabLangAr.classList.add('active');
+      if (tabLangEn) tabLangEn.classList.remove('active');
+      currentCategory = 'home_row_ar';
       currentLessonIndex = 0;
+      setKeyboardLanguage('ar');
+      renderCategoryPills();
       loadCurrentLesson();
-      showToast(`تم اختيار درس: ${pill.textContent}`);
+      showToast('تم التبديل إلى: التدريب العربي 🇸🇦');
     });
-  });
+  }
 
-  // Global Keyboard Keystroke Handler
+  if (tabLangEn) {
+    tabLangEn.addEventListener('click', () => {
+      currentLang = 'en';
+      tabLangEn.classList.add('active');
+      if (tabLangAr) tabLangAr.classList.remove('active');
+      currentCategory = 'home_row_en';
+      currentLessonIndex = 0;
+      setKeyboardLanguage('en');
+      renderCategoryPills();
+      loadCurrentLesson();
+      showToast('Switched to: English Training 🇬🇧');
+    });
+  }
+
+  // ==========================================================
+  // 5. KEYBOARD KEYSTROKE CAPTURE
+  // ==========================================================
   window.addEventListener('keydown', (e) => {
     // Ignore function keys, alt, ctrl, meta
     if (e.ctrlKey || e.altKey || e.metaKey) return;
     if (e.key === 'F5' || e.key === 'F12' || e.key === 'Tab') return;
 
-    // Handle physical keypress animation on virtual keyboard
+    // Physical keypress animation on virtual keyboard
     const keyEl = document.querySelector(`.key-cap[data-code="${e.code}"]`);
     if (keyEl) {
       keyEl.classList.add('pressed');
@@ -152,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btnToggleSound.addEventListener('click', () => {
       const isMuted = sound.toggleMute();
       btnToggleSound.classList.toggle('active', !isMuted);
-      showToast(isMuted ? 'تم كتم المؤثرات الصوتية' : 'تم تفعيل نقرات الكيبورد الميكانيكية');
+      showToast(isMuted ? 'تم كتم المؤثرات الصوتية' : 'تم تفعيل نقرات الكيبورد الميكانيكية 🔊');
     });
   }
 
@@ -160,7 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnResetTyping) {
     btnResetTyping.addEventListener('click', () => {
       loadCurrentLesson();
-      showToast('تمت إعادة ضبط الدرس');
+      showToast('تمت إعادة تشغيل التمرين الحالي');
     });
   }
 
@@ -190,8 +330,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // Virtual key clicks support (for mouse tapping)
   document.querySelectorAll('.key-cap').forEach(keyEl => {
     keyEl.addEventListener('click', () => {
-      const mainAr = keyEl.querySelector('.key-main-ar');
-      const char = mainAr ? mainAr.textContent.trim() : '';
+      const currentKbdLang = virtualKeyboard ? virtualKeyboard.getAttribute('data-keyboard-lang') : 'ar';
+      let char = '';
+      if (currentKbdLang === 'ar') {
+        const arSpan = keyEl.querySelector('.key-char-ar');
+        char = arSpan ? arSpan.textContent.trim() : '';
+      } else {
+        const enSpan = keyEl.querySelector('.key-char-en');
+        char = enSpan ? enSpan.textContent.trim().toLowerCase() : '';
+      }
+
       if (char && char.length === 1) {
         engine.handleKeystroke(char);
       } else if (keyEl.getAttribute('data-code') === 'Space') {
@@ -200,6 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Initial load
+  // Initial Setup
+  renderCategoryPills();
   loadCurrentLesson();
 });

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TypeMaster Academy | منصة تعليم الطباعة باللمس والكتابة السريعة</title>
-  <meta name="description" content="منصة تفاعلية متطورة لتعليم الكتابة السريعة والطباعة باللمس باللغتين العربية والإنجليزية مع لوحة مفاتيح بصرية مرشدة ومؤثرات نقرات ميكانيكية.">
+  <meta name="description" content="منصة تفاعلية متطورة لتعليم الكتابة السريعة والطباعة باللمس باللغتين العربية والإنجليزية مع لوحة مفاتيح مخصصة لكل لغة، دعم كامل للوضع الداكن ومؤثرات صوتية ميكانيكية.">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,7 +19,7 @@
   <!-- Academy Header -->
   <header class="academy-header">
     <div class="brand-wrapper">
-      <div class="brand-icon" title="TypeMaster Touch Typing Platform">
+      <div class="brand-icon" title="TypeMaster Touch Typing Academy">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect>
           <line x1="6" y1="8" x2="6" y2="8"></line>
@@ -34,7 +34,7 @@
       <div class="brand-titles">
         <h1>
           <span>TypeMaster Academy</span>
-          <span class="brand-badge">TouchType v2.5</span>
+          <span class="brand-badge">TouchType v3.0</span>
         </h1>
         <p>أكاديمية تعليم الطباعة باللمس والكتابة السريعة على لوحة المفاتيح</p>
       </div>
@@ -42,16 +42,37 @@
 
     <!-- Header Controls -->
     <div class="header-controls">
+      <!-- Dark Mode Toggle -->
+      <button class="btn-pill" id="btn-toggle-theme" title="تبديل المظهر الداكن / الفاتح">
+        <svg id="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <svg id="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <span id="theme-label">الوضع الداكن</span>
+      </button>
+
+      <!-- Mechanical Sound Toggle -->
       <button class="btn-pill active" id="btn-toggle-sound" title="تفعيل أو كتم نقرات المفاتيح الميكانيكية">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
           <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
         </svg>
         <span>نقرات الكيبورد</span>
       </button>
 
+      <!-- Reset Practice Button -->
       <button class="btn-pill" id="btn-reset-typing" title="إعادة تشغيل التمرين الحالي">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="1 4 1 10 7 10"></polyline>
           <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
         </svg>
@@ -70,7 +91,7 @@
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5">
             <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
           </svg>
-          <span>السرعة (WPM)</span>
+          <span id="label-hud-wpm">السرعة (WPM)</span>
         </div>
         <div class="hud-value" id="hud-wpm" style="color:var(--primary);">0 <span>WPM</span></div>
       </div>
@@ -81,7 +102,7 @@
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
             <polyline points="22 4 12 14.01 9 11.01"></polyline>
           </svg>
-          <span>نسبة الدقة</span>
+          <span id="label-hud-acc">نسبة الدقة</span>
         </div>
         <div class="hud-value" id="hud-accuracy" style="color:var(--emerald);">100%</div>
       </div>
@@ -92,7 +113,7 @@
             <circle cx="12" cy="12" r="10"></circle>
             <polyline points="12 6 12 12 16 14"></polyline>
           </svg>
-          <span>الوقت المنقضي</span>
+          <span id="label-hud-time">الوقت المنقضي</span>
         </div>
         <div class="hud-value" id="hud-time" style="color:var(--sky);">0 <span>ث</span></div>
       </div>
@@ -104,7 +125,7 @@
             <line x1="15" y1="9" x2="9" y2="15"></line>
             <line x1="9" y1="9" x2="15" y2="15"></line>
           </svg>
-          <span>الأخطاء</span>
+          <span id="label-hud-err">الأخطاء</span>
         </div>
         <div class="hud-value" id="hud-errors" style="color:var(--rose);">0</div>
       </div>
@@ -112,26 +133,37 @@
 
     <!-- Lesson Selection & Typing Box -->
     <section class="lesson-card">
-      <div class="lesson-top-bar">
-        <div class="lesson-category-pills">
-          <button class="category-pill active" data-category="home_row_ar">صف الارتكاز (عربي)</button>
-          <button class="category-pill" data-category="all_rows_ar">كل الصفوف (عربي)</button>
-          <button class="category-pill" data-category="quotes_ar">حكم ودرر ملهمة</button>
-          <button class="category-pill" data-category="home_row_en">English Home Row</button>
-          <button class="category-pill" data-category="tech_code">أكواد برمجية (Code)</button>
+      
+      <!-- Language Mode Bar (Arabic vs English) -->
+      <div class="lang-mode-bar">
+        <div class="lang-segmented-control">
+          <button class="lang-tab active" id="tab-lang-ar" data-lang="ar">
+            <span>🇸🇦 التدريب العربي</span>
+          </button>
+          <button class="lang-tab" id="tab-lang-en" data-lang="en">
+            <span>🇬🇧 English Training</span>
+          </button>
         </div>
-        <span style="font-size:12px; font-weight:700; color:var(--text-dim);">ابدأ بالطباعة فوراً عبر لوحة المفاتيح</span>
+
+        <div style="font-size:12px; font-weight:700; color:var(--text-dim);" id="tip-start-typing">
+          ابدأ بالطباعة فوراً عبر لوحة المفاتيح
+        </div>
+      </div>
+
+      <!-- Dynamic Category Pills Container -->
+      <div class="lesson-category-pills" id="lesson-category-pills">
+        <!-- Rendered via JS based on selected language -->
       </div>
 
       <!-- Text Display Box -->
       <div class="text-display-box" id="text-display-box" tabindex="0">
-        <!-- Spans injected via JavaScript -->
+        <!-- Character spans injected via JavaScript -->
       </div>
 
       <!-- Hand Finger Guide Bar -->
       <div class="finger-guide-bar">
-        <span>توزيع الأصابع على المفاتيح:</span>
-        <div style="display:flex; gap:14px;">
+        <span id="guide-finger-title">توزيع الأصابع على المفاتيح:</span>
+        <div style="display:flex; gap:14px; flex-wrap:wrap;">
           <div class="finger-guide-item">
             <span class="finger-dot" style="background:var(--finger-pinky);"></span>
             <span>الخنصر (Pinky)</span>
@@ -150,85 +182,105 @@
           </div>
           <div class="finger-guide-item">
             <span class="finger-dot" style="background:var(--finger-thumb);"></span>
-            <span>الإبهام (مسافة)</span>
+            <span>الإبهام (Space)</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Virtual Tactile Dual-Language Keyboard -->
-    <section class="virtual-keyboard-wrapper">
-      <!-- Row 1: Numbers & Symbols -->
-      <div class="keyboard-row">
-        <div class="key-cap key-finger-pinky" data-code="Backquote"><span class="key-main-ar">ذ</span><span class="key-sub-en">~</span></div>
-        <div class="key-cap key-finger-pinky" data-code="Digit1"><span class="key-main-ar">١</span><span class="key-sub-en">1</span></div>
-        <div class="key-cap key-finger-ring" data-code="Digit2"><span class="key-main-ar">٢</span><span class="key-sub-en">2</span></div>
-        <div class="key-cap key-finger-middle" data-code="Digit3"><span class="key-main-ar">٣</span><span class="key-sub-en">3</span></div>
-        <div class="key-cap key-finger-index" data-code="Digit4"><span class="key-main-ar">٤</span><span class="key-sub-en">4</span></div>
-        <div class="key-cap key-finger-index" data-code="Digit5"><span class="key-main-ar">٥</span><span class="key-sub-en">5</span></div>
-        <div class="key-cap key-finger-index" data-code="Digit6"><span class="key-main-ar">٦</span><span class="key-sub-en">6</span></div>
-        <div class="key-cap key-finger-index" data-code="Digit7"><span class="key-main-ar">٧</span><span class="key-sub-en">7</span></div>
-        <div class="key-cap key-finger-middle" data-code="Digit8"><span class="key-main-ar">٨</span><span class="key-sub-en">8</span></div>
-        <div class="key-cap key-finger-ring" data-code="Digit9"><span class="key-main-ar">٩</span><span class="key-sub-en">9</span></div>
-        <div class="key-cap key-finger-pinky" data-code="Digit0"><span class="key-main-ar">٠</span><span class="key-sub-en">0</span></div>
-        <div class="key-cap key-finger-pinky" data-code="Minus"><span class="key-main-ar">-</span><span class="key-sub-en">_</span></div>
-        <div class="key-cap key-finger-pinky" data-code="Equal"><span class="key-main-ar">=</span><span class="key-sub-en">+</span></div>
-        <div class="key-cap key-backspace" data-code="Backspace">Backspace</div>
+    <!-- Virtual Tactile Keyboard Section -->
+    <section class="keyboard-section">
+      <div class="keyboard-toolbar">
+        <div class="keyboard-badge-box">
+          <span class="kbd-badge" id="kbd-status-badge">
+            <span id="kbd-status-icon">🇸🇦</span>
+            <span id="kbd-status-text">لوحة المفاتيح: عربية بالكامل</span>
+          </span>
+        </div>
+        <div class="keyboard-switch-btns">
+          <button class="btn-kbd-toggle active" id="btn-kbd-ar">عربي فقط</button>
+          <button class="btn-kbd-toggle" id="btn-kbd-en">English Only</button>
+        </div>
       </div>
 
-      <!-- Row 2: Top Row (QWERTY) -->
-      <div class="keyboard-row">
-        <div class="key-cap key-tab" data-code="Tab">Tab</div>
-        <div class="key-cap key-finger-pinky" data-code="KeyQ"><span class="key-main-ar">ض</span><span class="key-sub-en">Q</span></div>
-        <div class="key-cap key-finger-ring" data-code="KeyW"><span class="key-main-ar">ص</span><span class="key-sub-en">W</span></div>
-        <div class="key-cap key-finger-middle" data-code="KeyE"><span class="key-main-ar">ث</span><span class="key-sub-en">E</span></div>
-        <div class="key-cap key-finger-index" data-code="KeyR"><span class="key-main-ar">ق</span><span class="key-sub-en">R</span></div>
-        <div class="key-cap key-finger-index" data-code="KeyT"><span class="key-main-ar">ف</span><span class="key-sub-en">T</span></div>
-        <div class="key-cap key-finger-index" data-code="KeyY"><span class="key-main-ar">غ</span><span class="key-sub-en">Y</span></div>
-        <div class="key-cap key-finger-index" data-code="KeyU"><span class="key-main-ar">ع</span><span class="key-sub-en">U</span></div>
-        <div class="key-cap key-finger-middle" data-code="KeyI"><span class="key-main-ar">هـ</span><span class="key-sub-en">I</span></div>
-        <div class="key-cap key-finger-ring" data-code="KeyO"><span class="key-main-ar">خ</span><span class="key-sub-en">O</span></div>
-        <div class="key-cap key-finger-pinky" data-code="KeyP"><span class="key-main-ar">ح</span><span class="key-sub-en">P</span></div>
-        <div class="key-cap key-finger-pinky" data-code="BracketLeft"><span class="key-main-ar">ج</span><span class="key-sub-en">[</span></div>
-        <div class="key-cap key-finger-pinky" data-code="BracketRight"><span class="key-main-ar">د</span><span class="key-sub-en">]</span></div>
-      </div>
+      <!-- Keyboard Wrapper (Strictly Arabic or English via data-keyboard-lang) -->
+      <div class="virtual-keyboard-wrapper" id="virtual-keyboard" data-keyboard-lang="ar">
+        
+        <!-- Row 1: Numbers & Symbols -->
+        <div class="keyboard-row">
+          <div class="key-cap key-finger-pinky" data-code="Backquote"><span class="key-char-ar">ذ</span><span class="key-char-en">`</span></div>
+          <div class="key-cap key-finger-pinky" data-code="Digit1"><span class="key-char-ar">١</span><span class="key-char-en">1</span></div>
+          <div class="key-cap key-finger-ring" data-code="Digit2"><span class="key-char-ar">٢</span><span class="key-char-en">2</span></div>
+          <div class="key-cap key-finger-middle" data-code="Digit3"><span class="key-char-ar">٣</span><span class="key-char-en">3</span></div>
+          <div class="key-cap key-finger-index" data-code="Digit4"><span class="key-char-ar">٤</span><span class="key-char-en">4</span></div>
+          <div class="key-cap key-finger-index" data-code="Digit5"><span class="key-char-ar">٥</span><span class="key-char-en">5</span></div>
+          <div class="key-cap key-finger-index" data-code="Digit6"><span class="key-char-ar">٦</span><span class="key-char-en">6</span></div>
+          <div class="key-cap key-finger-index" data-code="Digit7"><span class="key-char-ar">٧</span><span class="key-char-en">7</span></div>
+          <div class="key-cap key-finger-middle" data-code="Digit8"><span class="key-char-ar">٨</span><span class="key-char-en">8</span></div>
+          <div class="key-cap key-finger-ring" data-code="Digit9"><span class="key-char-ar">٩</span><span class="key-char-en">9</span></div>
+          <div class="key-cap key-finger-pinky" data-code="Digit0"><span class="key-char-ar">٠</span><span class="key-char-en">0</span></div>
+          <div class="key-cap key-finger-pinky" data-code="Minus"><span class="key-char-ar">-</span><span class="key-char-en">-</span></div>
+          <div class="key-cap key-finger-pinky" data-code="Equal"><span class="key-char-ar">=</span><span class="key-char-en">=</span></div>
+          <div class="key-cap key-backspace" data-code="Backspace"><span class="key-char-ar">تراجع ⌫</span><span class="key-char-en">Backspace ⌫</span></div>
+        </div>
 
-      <!-- Row 3: Home Row (ASDF JKL;) - CORE TOUCH ROW -->
-      <div class="keyboard-row">
-        <div class="key-cap key-caps" data-code="CapsLock">Caps</div>
-        <div class="key-cap key-finger-pinky" data-code="KeyA"><span class="key-main-ar">ش</span><span class="key-sub-en">A</span></div>
-        <div class="key-cap key-finger-ring" data-code="KeyS"><span class="key-main-ar">س</span><span class="key-sub-en">S</span></div>
-        <div class="key-cap key-finger-middle" data-code="KeyD"><span class="key-main-ar">ي</span><span class="key-sub-en">D</span></div>
-        <div class="key-cap key-finger-index has-bump" data-code="KeyF" title="صف الارتكاز الأيسر"><span class="key-main-ar">ب</span><span class="key-sub-en">F</span></div>
-        <div class="key-cap key-finger-index" data-code="KeyG"><span class="key-main-ar">ل</span><span class="key-sub-en">G</span></div>
-        <div class="key-cap key-finger-index" data-code="KeyH"><span class="key-main-ar">ا</span><span class="key-sub-en">H</span></div>
-        <div class="key-cap key-finger-index has-bump" data-code="KeyJ" title="صف الارتكاز الأيمن"><span class="key-main-ar">ت</span><span class="key-sub-en">J</span></div>
-        <div class="key-cap key-finger-middle" data-code="KeyK"><span class="key-main-ar">ن</span><span class="key-sub-en">K</span></div>
-        <div class="key-cap key-finger-ring" data-code="KeyL"><span class="key-main-ar">م</span><span class="key-sub-en">L</span></div>
-        <div class="key-cap key-finger-pinky" data-code="Semicolon"><span class="key-main-ar">ك</span><span class="key-sub-en">;</span></div>
-        <div class="key-cap key-finger-pinky" data-code="Quote"><span class="key-main-ar">ط</span><span class="key-sub-en">'</span></div>
-        <div class="key-cap key-enter" data-code="Enter">Enter ↵</div>
-      </div>
+        <!-- Row 2: Top Row (ض ص ث ق ف غ ع ه خ ح ج د / QWERTYUIOP[]) -->
+        <div class="keyboard-row">
+          <div class="key-cap key-tab" data-code="Tab"><span class="key-char-ar">تبويب ⇥</span><span class="key-char-en">Tab ⇥</span></div>
+          <div class="key-cap key-finger-pinky" data-code="KeyQ"><span class="key-char-ar">ض</span><span class="key-char-en">Q</span></div>
+          <div class="key-cap key-finger-ring" data-code="KeyW"><span class="key-char-ar">ص</span><span class="key-char-en">W</span></div>
+          <div class="key-cap key-finger-middle" data-code="KeyE"><span class="key-char-ar">ث</span><span class="key-char-en">E</span></div>
+          <div class="key-cap key-finger-index" data-code="KeyR"><span class="key-char-ar">ق</span><span class="key-char-en">R</span></div>
+          <div class="key-cap key-finger-index" data-code="KeyT"><span class="key-char-ar">ف</span><span class="key-char-en">T</span></div>
+          <div class="key-cap key-finger-index" data-code="KeyY"><span class="key-char-ar">غ</span><span class="key-char-en">Y</span></div>
+          <div class="key-cap key-finger-index" data-code="KeyU"><span class="key-char-ar">ع</span><span class="key-char-en">U</span></div>
+          <div class="key-cap key-finger-middle" data-code="KeyI"><span class="key-char-ar">هـ</span><span class="key-char-en">I</span></div>
+          <div class="key-cap key-finger-ring" data-code="KeyO"><span class="key-char-ar">خ</span><span class="key-char-en">O</span></div>
+          <div class="key-cap key-finger-pinky" data-code="KeyP"><span class="key-char-ar">ح</span><span class="key-char-en">P</span></div>
+          <div class="key-cap key-finger-pinky" data-code="BracketLeft"><span class="key-char-ar">ج</span><span class="key-char-en">[</span></div>
+          <div class="key-cap key-finger-pinky" data-code="BracketRight"><span class="key-char-ar">د</span><span class="key-char-en">]</span></div>
+        </div>
 
-      <!-- Row 4: Bottom Row (ZXCVBNM) -->
-      <div class="keyboard-row">
-        <div class="key-cap key-shift" data-code="ShiftLeft">Shift</div>
-        <div class="key-cap key-finger-pinky" data-code="KeyZ"><span class="key-main-ar">ئ</span><span class="key-sub-en">Z</span></div>
-        <div class="key-cap key-finger-ring" data-code="KeyX"><span class="key-main-ar">ء</span><span class="key-sub-en">X</span></div>
-        <div class="key-cap key-finger-middle" data-code="KeyC"><span class="key-main-ar">ؤ</span><span class="key-sub-en">C</span></div>
-        <div class="key-cap key-finger-index" data-code="KeyV"><span class="key-main-ar">ر</span><span class="key-sub-en">V</span></div>
-        <div class="key-cap key-finger-index" data-code="KeyB"><span class="key-main-ar">لا</span><span class="key-sub-en">B</span></div>
-        <div class="key-cap key-finger-index" data-code="KeyN"><span class="key-main-ar">ى</span><span class="key-sub-en">N</span></div>
-        <div class="key-cap key-finger-middle" data-code="KeyM"><span class="key-main-ar">ة</span><span class="key-sub-en">M</span></div>
-        <div class="key-cap key-finger-ring" data-code="Comma"><span class="key-main-ar">و</span><span class="key-sub-en">,</span></div>
-        <div class="key-cap key-finger-pinky" data-code="Period"><span class="key-main-ar">ز</span><span class="key-sub-en">.</span></div>
-        <div class="key-cap key-finger-pinky" data-code="Slash"><span class="key-main-ar">ظ</span><span class="key-sub-en">/</span></div>
-        <div class="key-cap key-shift" data-code="ShiftRight">Shift</div>
-      </div>
+        <!-- Row 3: Home Row (ش س ي ب ل ا ت ن م ك ط / ASDFGHJKL;') -->
+        <div class="keyboard-row">
+          <div class="key-cap key-caps" data-code="CapsLock"><span class="key-char-ar">حروف كبرى</span><span class="key-char-en">Caps</span></div>
+          <div class="key-cap key-finger-pinky" data-code="KeyA"><span class="key-char-ar">ش</span><span class="key-char-en">A</span></div>
+          <div class="key-cap key-finger-ring" data-code="KeyS"><span class="key-char-ar">س</span><span class="key-char-en">S</span></div>
+          <div class="key-cap key-finger-middle" data-code="KeyD"><span class="key-char-ar">ي</span><span class="key-char-en">D</span></div>
+          <div class="key-cap key-finger-index has-bump" data-code="KeyF" title="صف الارتكاز"><span class="key-char-ar">ب</span><span class="key-char-en">F</span></div>
+          <div class="key-cap key-finger-index" data-code="KeyG"><span class="key-char-ar">ل</span><span class="key-char-en">G</span></div>
+          <div class="key-cap key-finger-index" data-code="KeyH"><span class="key-char-ar">ا</span><span class="key-char-en">H</span></div>
+          <div class="key-cap key-finger-index has-bump" data-code="KeyJ" title="صف الارتكاز"><span class="key-char-ar">ت</span><span class="key-char-en">J</span></div>
+          <div class="key-cap key-finger-middle" data-code="KeyK"><span class="key-char-ar">ن</span><span class="key-char-en">K</span></div>
+          <div class="key-cap key-finger-ring" data-code="KeyL"><span class="key-char-ar">م</span><span class="key-char-en">L</span></div>
+          <div class="key-cap key-finger-pinky" data-code="Semicolon"><span class="key-char-ar">ك</span><span class="key-char-en">;</span></div>
+          <div class="key-cap key-finger-pinky" data-code="Quote"><span class="key-char-ar">ط</span><span class="key-char-en">'</span></div>
+          <div class="key-cap key-enter" data-code="Enter"><span class="key-char-ar">إدخال ↵</span><span class="key-char-en">Enter ↵</span></div>
+        </div>
 
-      <!-- Row 5: Space Bar Row -->
-      <div class="keyboard-row">
-        <div class="key-cap key-finger-thumb key-space" data-code="Space"><span class="key-main-ar">مسافة (Space)</span></div>
+        <!-- Row 4: Bottom Row (ئ ء ؤ ر لا ى ة و ز ظ / ZXCVBNM,./) -->
+        <div class="keyboard-row">
+          <div class="key-cap key-shift" data-code="ShiftLeft"><span class="key-char-ar">تبديل ⇧</span><span class="key-char-en">Shift ⇧</span></div>
+          <div class="key-cap key-finger-pinky" data-code="KeyZ"><span class="key-char-ar">ئ</span><span class="key-char-en">Z</span></div>
+          <div class="key-cap key-finger-ring" data-code="KeyX"><span class="key-char-ar">ء</span><span class="key-char-en">X</span></div>
+          <div class="key-cap key-finger-middle" data-code="KeyC"><span class="key-char-ar">ؤ</span><span class="key-char-en">C</span></div>
+          <div class="key-cap key-finger-index" data-code="KeyV"><span class="key-char-ar">ر</span><span class="key-char-en">V</span></div>
+          <div class="key-cap key-finger-index" data-code="KeyB"><span class="key-char-ar">لا</span><span class="key-char-en">B</span></div>
+          <div class="key-cap key-finger-index" data-code="KeyN"><span class="key-char-ar">ى</span><span class="key-char-en">N</span></div>
+          <div class="key-cap key-finger-middle" data-code="KeyM"><span class="key-char-ar">ة</span><span class="key-char-en">M</span></div>
+          <div class="key-cap key-finger-ring" data-code="Comma"><span class="key-char-ar">و</span><span class="key-char-en">,</span></div>
+          <div class="key-cap key-finger-pinky" data-code="Period"><span class="key-char-ar">ز</span><span class="key-char-en">.</span></div>
+          <div class="key-cap key-finger-pinky" data-code="Slash"><span class="key-char-ar">ظ</span><span class="key-char-en">/</span></div>
+          <div class="key-cap key-shift" data-code="ShiftRight"><span class="key-char-ar">تبديل ⇧</span><span class="key-char-en">Shift ⇧</span></div>
+        </div>
+
+        <!-- Row 5: Space Bar Row -->
+        <div class="keyboard-row">
+          <div class="key-cap key-finger-thumb key-space" data-code="Space">
+            <span class="key-char-ar">مسافة (Space)</span>
+            <span class="key-char-en">Space Bar</span>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -245,25 +297,25 @@
       </div>
 
       <div>
-        <h2 style="font-size:20px; font-weight:800; color:var(--text-main); margin-bottom:4px;">إنجاز رائع! أتممت الدرس بنجاح</h2>
-        <p style="font-size:13px; color:var(--text-muted);">إليك ملخص أدائك وسرعة طباعتك في هذا التمرين:</p>
+        <h2 style="font-size:20px; font-weight:800; color:var(--text-main); margin-bottom:4px;" id="modal-title">إنجاز رائع! أتممت الدرس بنجاح</h2>
+        <p style="font-size:13px; color:var(--text-muted);" id="modal-desc">إليك ملخص أدائك وسرعة طباعتك في هذا التمرين:</p>
       </div>
 
       <div class="modal-score-grid">
         <div class="modal-score-item">
-          <span class="modal-score-label">سرعة الطباعة (WPM)</span>
+          <span class="modal-score-label" id="modal-lbl-wpm">سرعة الطباعة (WPM)</span>
           <span class="modal-score-value" id="modal-wpm">0 WPM</span>
         </div>
         <div class="modal-score-item">
-          <span class="modal-score-label">نسبة الدقة</span>
+          <span class="modal-score-label" id="modal-lbl-acc">نسبة الدقة</span>
           <span class="modal-score-value" id="modal-accuracy" style="color:var(--emerald);">0%</span>
         </div>
         <div class="modal-score-item">
-          <span class="modal-score-label">إجمالي الضغطات</span>
+          <span class="modal-score-label" id="modal-lbl-strokes">إجمالي الضغطات</span>
           <span class="modal-score-value" id="modal-keystrokes">0</span>
         </div>
         <div class="modal-score-item">
-          <span class="modal-score-label">المستوى المحقق</span>
+          <span class="modal-score-label" id="modal-lbl-rating">المستوى المحقق</span>
           <span class="modal-score-value" id="modal-rating" style="font-size:16px;">مبتدئ</span>
         </div>
       </div>
