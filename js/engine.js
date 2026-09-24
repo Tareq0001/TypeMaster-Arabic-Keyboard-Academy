@@ -1,11 +1,78 @@
 /**
- * TypeMaster Academy | Core Typing Engine & Keyboard Synchronizer
- * ===============================================================
- * Real-time keystroke evaluation, WPM/CPM mathematical calculations,
- * character highlighting, and virtual keyboard key tracking.
+ * TypeMaster Academy | Core Typing Engine, Countdown Timer & Finger Tracker
+ * ==========================================================================
+ * Real-time keystroke evaluation, WPM/CPM calculations, countdown timer,
+ * finger ergonomic locator, and virtual keyboard key tracking.
  * 
  * Author: Tareq Ali (@Tareq0001)
  */
+
+const KEY_TO_FINGER = {
+  // Left Hand
+  'Backquote': { id: 'l-pinky', nameAr: 'الخنصر الأيسر', nameEn: 'Left Pinky', hand: 'left', color: '#ec4899' },
+  'Digit1': { id: 'l-pinky', nameAr: 'الخنصر الأيسر', nameEn: 'Left Pinky', hand: 'left', color: '#ec4899' },
+  'KeyQ': { id: 'l-pinky', nameAr: 'الخنصر الأيسر', nameEn: 'Left Pinky', hand: 'left', color: '#ec4899' },
+  'KeyA': { id: 'l-pinky', nameAr: 'الخنصر الأيسر', nameEn: 'Left Pinky', hand: 'left', color: '#ec4899' },
+  'KeyZ': { id: 'l-pinky', nameAr: 'الخنصر الأيسر', nameEn: 'Left Pinky', hand: 'left', color: '#ec4899' },
+  'Tab': { id: 'l-pinky', nameAr: 'الخنصر الأيسر', nameEn: 'Left Pinky', hand: 'left', color: '#ec4899' },
+  'CapsLock': { id: 'l-pinky', nameAr: 'الخنصر الأيسر', nameEn: 'Left Pinky', hand: 'left', color: '#ec4899' },
+  'ShiftLeft': { id: 'l-pinky', nameAr: 'الخنصر الأيسر', nameEn: 'Left Pinky', hand: 'left', color: '#ec4899' },
+
+  'Digit2': { id: 'l-ring', nameAr: 'البنصر الأيسر', nameEn: 'Left Ring', hand: 'left', color: '#8b5cf6' },
+  'KeyW': { id: 'l-ring', nameAr: 'البنصر الأيسر', nameEn: 'Left Ring', hand: 'left', color: '#8b5cf6' },
+  'KeyS': { id: 'l-ring', nameAr: 'البنصر الأيسر', nameEn: 'Left Ring', hand: 'left', color: '#8b5cf6' },
+  'KeyX': { id: 'l-ring', nameAr: 'البنصر الأيسر', nameEn: 'Left Ring', hand: 'left', color: '#8b5cf6' },
+
+  'Digit3': { id: 'l-middle', nameAr: 'الوسطى اليسرى', nameEn: 'Left Middle', hand: 'left', color: '#0ea5e9' },
+  'KeyE': { id: 'l-middle', nameAr: 'الوسطى اليسرى', nameEn: 'Left Middle', hand: 'left', color: '#0ea5e9' },
+  'KeyD': { id: 'l-middle', nameAr: 'الوسطى اليسرى', nameEn: 'Left Middle', hand: 'left', color: '#0ea5e9' },
+  'KeyC': { id: 'l-middle', nameAr: 'الوسطى اليسرى', nameEn: 'Left Middle', hand: 'left', color: '#0ea5e9' },
+
+  'Digit4': { id: 'l-index', nameAr: 'السبابة اليسرى', nameEn: 'Left Index', hand: 'left', color: '#10b981' },
+  'Digit5': { id: 'l-index', nameAr: 'السبابة اليسرى', nameEn: 'Left Index', hand: 'left', color: '#10b981' },
+  'KeyR': { id: 'l-index', nameAr: 'السبابة اليسرى', nameEn: 'Left Index', hand: 'left', color: '#10b981' },
+  'KeyT': { id: 'l-index', nameAr: 'السبابة اليسرى', nameEn: 'Left Index', hand: 'left', color: '#10b981' },
+  'KeyF': { id: 'l-index', nameAr: 'السبابة اليسرى (نتوء الارتكاز)', nameEn: 'Left Index (Home Bump)', hand: 'left', color: '#10b981' },
+  'KeyG': { id: 'l-index', nameAr: 'السبابة اليسرى', nameEn: 'Left Index', hand: 'left', color: '#10b981' },
+  'KeyV': { id: 'l-index', nameAr: 'السبابة اليسرى', nameEn: 'Left Index', hand: 'left', color: '#10b981' },
+  'KeyB': { id: 'l-index', nameAr: 'السبابة اليسرى', nameEn: 'Left Index', hand: 'left', color: '#10b981' },
+
+  // Space / Thumbs
+  'Space': { id: 'thumb', nameAr: 'أحد الإبهامين (مسافة)', nameEn: 'Thumbs (Space Bar)', hand: 'both', color: '#f59e0b' },
+
+  // Right Hand
+  'Digit6': { id: 'r-index', nameAr: 'السبابة اليمنى', nameEn: 'Right Index', hand: 'right', color: '#10b981' },
+  'Digit7': { id: 'r-index', nameAr: 'السبابة اليمنى', nameEn: 'Right Index', hand: 'right', color: '#10b981' },
+  'KeyY': { id: 'r-index', nameAr: 'السبابة اليمنى', nameEn: 'Right Index', hand: 'right', color: '#10b981' },
+  'KeyU': { id: 'r-index', nameAr: 'السبابة اليمنى', nameEn: 'Right Index', hand: 'right', color: '#10b981' },
+  'KeyH': { id: 'r-index', nameAr: 'السبابة اليمنى', nameEn: 'Right Index', hand: 'right', color: '#10b981' },
+  'KeyJ': { id: 'r-index', nameAr: 'السبابة اليمنى (نتوء الارتكاز)', nameEn: 'Right Index (Home Bump)', hand: 'right', color: '#10b981' },
+  'KeyN': { id: 'r-index', nameAr: 'السبابة اليمنى', nameEn: 'Right Index', hand: 'right', color: '#10b981' },
+  'KeyM': { id: 'r-index', nameAr: 'السبابة اليمنى', nameEn: 'Right Index', hand: 'right', color: '#10b981' },
+
+  'Digit8': { id: 'r-middle', nameAr: 'الوسطى اليمنى', nameEn: 'Right Middle', hand: 'right', color: '#0ea5e9' },
+  'KeyI': { id: 'r-middle', nameAr: 'الوسطى اليمنى', nameEn: 'Right Middle', hand: 'right', color: '#0ea5e9' },
+  'KeyK': { id: 'r-middle', nameAr: 'الوسطى اليمنى', nameEn: 'Right Middle', hand: 'right', color: '#0ea5e9' },
+  'Comma': { id: 'r-middle', nameAr: 'الوسطى اليمنى', nameEn: 'Right Middle', hand: 'right', color: '#0ea5e9' },
+
+  'Digit9': { id: 'r-ring', nameAr: 'البنصر الأيمن', nameEn: 'Right Ring', hand: 'right', color: '#8b5cf6' },
+  'KeyO': { id: 'r-ring', nameAr: 'البنصر الأيمن', nameEn: 'Right Ring', hand: 'right', color: '#8b5cf6' },
+  'KeyL': { id: 'r-ring', nameAr: 'البنصر الأيمن', nameEn: 'Right Ring', hand: 'right', color: '#8b5cf6' },
+  'Period': { id: 'r-ring', nameAr: 'البنصر الأيمن', nameEn: 'Right Ring', hand: 'right', color: '#8b5cf6' },
+
+  'Digit0': { id: 'r-pinky', nameAr: 'الخنصر الأيمن', nameEn: 'Right Pinky', hand: 'right', color: '#ec4899' },
+  'Minus': { id: 'r-pinky', nameAr: 'الخنصر الأيمن', nameEn: 'Right Pinky', hand: 'right', color: '#ec4899' },
+  'Equal': { id: 'r-pinky', nameAr: 'الخنصر الأيمن', nameEn: 'Right Pinky', hand: 'right', color: '#ec4899' },
+  'KeyP': { id: 'r-pinky', nameAr: 'الخنصر الأيمن', nameEn: 'Right Pinky', hand: 'right', color: '#ec4899' },
+  'BracketLeft': { id: 'r-pinky', nameAr: 'الخنصر الأيمن', nameEn: 'Right Pinky', hand: 'right', color: '#ec4899' },
+  'BracketRight': { id: 'r-pinky', nameAr: 'الخنصر الأيمن', nameEn: 'Right Pinky', hand: 'right', color: '#ec4899' },
+  'Semicolon': { id: 'r-pinky', nameAr: 'الخنصر الأيمن', nameEn: 'Right Pinky', hand: 'right', color: '#ec4899' },
+  'Quote': { id: 'r-pinky', nameAr: 'الخنصر الأيمن', nameEn: 'Right Pinky', hand: 'right', color: '#ec4899' },
+  'Slash': { id: 'r-pinky', nameAr: 'الخنصر الأيمن', nameEn: 'Right Pinky', hand: 'right', color: '#ec4899' },
+  'Backspace': { id: 'r-pinky', nameAr: 'الخنصر الأيمن', nameEn: 'Right Pinky', hand: 'right', color: '#ec4899' },
+  'Enter': { id: 'r-pinky', nameAr: 'الخنصر الأيمن', nameEn: 'Right Pinky', hand: 'right', color: '#ec4899' },
+  'ShiftRight': { id: 'r-pinky', nameAr: 'الخنصر الأيمن', nameEn: 'Right Pinky', hand: 'right', color: '#ec4899' }
+};
 
 class TypingEngine {
   constructor(soundEngine, onUpdateUI, onFinishLesson) {
@@ -25,7 +92,15 @@ class TypingEngine {
     this.timerInterval = null;
     this.isFinished = false;
 
-    // Character to Key code mapping (for highlighting virtual keyboard)
+    // Stage Time Management
+    this.timeLimitSeconds = 60;
+    this.isTimeExpired = false;
+
+    // Current targeted key and finger
+    this.currentFinger = null;
+    this.currentKeyCode = null;
+
+    // Character to Key code mapping
     this.charToKeyMap = {
       ' ': 'Space',
       // Arabic Home Row
@@ -34,12 +109,16 @@ class TypingEngine {
       'م': 'KeyL', 'ك': 'Semicolon', 'ط': 'Quote',
       // Arabic Top Row
       'ض': 'KeyQ', 'ص': 'KeyW', 'ث': 'KeyE', 'ق': 'KeyR',
-      'ف': 'KeyT', 'غ': 'KeyY', 'ع': 'KeyU', 'ه': 'KeyI',
+      'ف': 'KeyT', 'غ': 'KeyY', 'ع': 'KeyU', 'ه': 'KeyI', 'هـ': 'KeyI',
       'خ': 'KeyO', 'ح': 'KeyP', 'ج': 'BracketLeft', 'د': 'BracketRight',
       // Arabic Bottom Row
       'ئ': 'KeyZ', 'ء': 'KeyX', 'ؤ': 'KeyC', 'ر': 'KeyV',
       'لا': 'KeyB', 'ى': 'KeyN', 'ة': 'KeyM', 'و': 'Comma',
       'ز': 'Period', 'ظ': 'Slash',
+      // Arabic Digits
+      'ذ': 'Backquote',
+      '١': 'Digit1', '٢': 'Digit2', '٣': 'Digit3', '٤': 'Digit4', '٥': 'Digit5',
+      '٦': 'Digit6', '٧': 'Digit7', '٨': 'Digit8', '٩': 'Digit9', '٠': 'Digit0',
       // English Alphabet
       'a': 'KeyA', 'b': 'KeyB', 'c': 'KeyC', 'd': 'KeyD',
       'e': 'KeyE', 'f': 'KeyF', 'g': 'KeyG', 'h': 'KeyH',
@@ -48,7 +127,7 @@ class TypingEngine {
       'q': 'KeyQ', 'r': 'KeyR', 's': 'KeyS', 't': 'KeyT',
       'u': 'KeyU', 'v': 'KeyV', 'w': 'KeyW', 'x': 'KeyX',
       'y': 'KeyY', 'z': 'KeyZ',
-      // Numbers & Symbols
+      // Standard Numbers & Symbols
       '0': 'Digit0', '1': 'Digit1', '2': 'Digit2', '3': 'Digit3', '4': 'Digit4',
       '5': 'Digit5', '6': 'Digit6', '7': 'Digit7', '8': 'Digit8', '9': 'Digit9',
       ';': 'Semicolon', ':': 'Semicolon', '=': 'Equal', '+': 'Equal',
@@ -56,13 +135,15 @@ class TypingEngine {
       '{': 'BracketLeft', '}': 'BracketRight',
       '(': 'Digit9', ')': 'Digit0', '>': 'Period', '<': 'Comma',
       '.': 'Period', ',': 'Comma', '/': 'Slash', '?': 'Slash',
-      '"': 'Quote', "'": 'Quote', '`': 'Backquote', '~': 'Backquote'
+      '"': 'Quote', "'": 'Quote', '`': 'Backquote', '~': 'Backquote',
+      '؛': 'Semicolon', '،': 'Comma', '؟': 'Slash'
     };
   }
 
-  loadLesson(lessonText) {
+  loadLesson(lessonText, timeLimit = 60) {
     this.reset();
     this.text = lessonText.trim();
+    this.timeLimitSeconds = timeLimit;
     this.charStates = new Array(this.text.length).fill('pending');
     this.updateTargetKeyHighlight();
     if (this.onUpdateUI) this.onUpdateUI(this.getMetrics());
@@ -76,7 +157,10 @@ class TypingEngine {
     this.totalKeystrokes = 0;
     this.startTime = null;
     this.isFinished = false;
+    this.isTimeExpired = false;
     this.charStates = [];
+    this.currentFinger = null;
+    this.currentKeyCode = null;
   }
 
   handleKeystroke(charPressed) {
@@ -86,7 +170,12 @@ class TypingEngine {
     if (!this.startTime) {
       this.startTime = Date.now();
       this.timerInterval = setInterval(() => {
-        if (this.onUpdateUI) this.onUpdateUI(this.getMetrics());
+        const metrics = this.getMetrics();
+        if (metrics.remainingSeconds <= 0 && !this.isTimeExpired) {
+          this.isTimeExpired = true;
+          // Warn or finish
+        }
+        if (this.onUpdateUI) this.onUpdateUI(metrics);
       }, 500);
     }
 
@@ -143,40 +232,57 @@ class TypingEngine {
 
   getMetrics() {
     const elapsedSeconds = this.startTime ? Math.max(1, Math.round((Date.now() - this.startTime) / 1000)) : 0;
+    const remainingSeconds = Math.max(0, this.timeLimitSeconds - elapsedSeconds);
     const elapsedMinutes = elapsedSeconds / 60.0;
 
     // Standard Typing Standard: 1 word = 5 characters
     const wpm = elapsedMinutes > 0 ? Math.round((this.correctCount / 5) / elapsedMinutes) : 0;
     const cpm = elapsedMinutes > 0 ? Math.round(this.correctCount / elapsedMinutes) : 0;
     const accuracy = this.totalKeystrokes > 0 ? Math.round((this.correctCount / this.totalKeystrokes) * 100) : 100;
+    const progressPercent = this.text.length > 0 ? Math.round((this.currentIndex / this.text.length) * 100) : 0;
 
-    // Rating
+    // Pedagogical Rating
     let rating = 'مبتدئ';
-    if (wpm >= 65) rating = 'طابع نفاث (خبير)';
-    else if (wpm >= 45) rating = 'محترف';
-    else if (wpm >= 25) rating = 'متوسط ومتقدم';
+    if (wpm >= 60) rating = 'طابع نفاث (خبير)';
+    else if (wpm >= 40) rating = 'محترف';
+    else if (wpm >= 25) rating = 'متقدم';
+    else if (wpm >= 15) rating = 'متوسط';
 
     return {
       wpm,
       cpm,
       accuracy,
       elapsedSeconds,
+      remainingSeconds,
+      timeLimitSeconds: this.timeLimitSeconds,
+      progressPercent,
       correctCount: this.correctCount,
       incorrectCount: this.incorrectCount,
       totalKeystrokes: this.totalKeystrokes,
       currentIndex: this.currentIndex,
       totalChars: this.text.length,
       rating,
-      isFinished: this.isFinished
+      finger: this.currentFinger,
+      targetKey: this.currentKeyCode,
+      isFinished: this.isFinished,
+      isTimeExpired: this.isTimeExpired
     };
   }
 
   updateTargetKeyHighlight() {
     this.clearTargetKeyHighlight();
-    if (this.currentIndex >= this.text.length) return;
+    if (this.currentIndex >= this.text.length) {
+      this.currentFinger = null;
+      this.currentKeyCode = null;
+      return;
+    }
 
-    const nextChar = this.text[this.currentIndex].toLowerCase();
-    const targetKeyCode = this.charToKeyMap[nextChar] || this.charToKeyMap[this.text[this.currentIndex]];
+    const currentChar = this.text[this.currentIndex];
+    const lookupKey = currentChar.toLowerCase();
+    const targetKeyCode = this.charToKeyMap[currentChar] || this.charToKeyMap[lookupKey] || 'Space';
+
+    this.currentKeyCode = targetKeyCode;
+    this.currentFinger = KEY_TO_FINGER[targetKeyCode] || { id: 'thumb', nameAr: 'الإبهام', nameEn: 'Thumb', hand: 'both', color: '#f59e0b' };
 
     if (targetKeyCode) {
       const keyEl = document.querySelector(`.key-cap[data-code="${targetKeyCode}"]`);

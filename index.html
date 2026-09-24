@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TypeMaster Academy | منصة تعليم الطباعة باللمس والكتابة السريعة</title>
-  <meta name="description" content="منصة تفاعلية متطورة لتعليم الكتابة السريعة والطباعة باللمس باللغتين العربية والإنجليزية مع لوحة مفاتيح مخصصة لكل لغة، دعم كامل للوضع الداكن ومؤثرات صوتية ميكانيكية.">
+  <title>TypeMaster Academy | أكاديمية تعليم الطباعة باللمس والخطة التدريبية</title>
+  <meta name="description" content="أكاديمية تعليمية متكاملة لتعليم الطباعة باللمس والكتابة السريعة وفق مراحل تدريبية وتطويرية محددة بوقت، مع محاكاة بصرية للأصابع العشرة ولوحة مفاتيح تفاعلية.">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -34,14 +34,24 @@
       <div class="brand-titles">
         <h1>
           <span>TypeMaster Academy</span>
-          <span class="brand-badge">TouchType v3.0</span>
+          <span class="brand-badge">EduEdition v4.0</span>
         </h1>
-        <p>أكاديمية تعليم الطباعة باللمس والكتابة السريعة على لوحة المفاتيح</p>
+        <p>أكاديمية تعليم الطباعة باللمس وفق مراحل تدريبية ومنهجية قياس الأصابع</p>
       </div>
     </div>
 
     <!-- Header Controls -->
     <div class="header-controls">
+      <!-- Training Roadmap Plan Modal Button -->
+      <button class="btn-pill btn-roadmap" id="btn-open-roadmap" title="عرض الخطة التدريبية والتطويرية الشاملة">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+          <line x1="8" y1="2" x2="8" y2="18"></line>
+          <line x1="16" y1="6" x2="16" y2="22"></line>
+        </svg>
+        <span>الخطة التدريبية والتطويرية</span>
+      </button>
+
       <!-- Dark Mode Toggle -->
       <button class="btn-pill" id="btn-toggle-theme" title="تبديل المظهر الداكن / الفاتح">
         <svg id="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -71,7 +81,7 @@
       </button>
 
       <!-- Reset Practice Button -->
-      <button class="btn-pill" id="btn-reset-typing" title="إعادة تشغيل التمرين الحالي">
+      <button class="btn-pill" id="btn-reset-typing" title="إعادة تشغيل المرحلة الحالية">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="1 4 1 10 7 10"></polyline>
           <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
@@ -84,18 +94,82 @@
   <!-- Main Typing Arena -->
   <main class="typing-arena">
 
-    <!-- HUD Metrics Grid -->
+    <!-- Pedagogical Stage Objective & Active Finger Guidance Card -->
+    <section class="stage-info-card" id="stage-info-card">
+      <div class="stage-meta-header">
+        <div class="stage-badge-box">
+          <span class="stage-num-badge" id="stage-num-badge">المرحلة 1 من 6</span>
+          <h2 class="stage-title-text" id="stage-title-text">المرحلة 1: تثبيت صف الارتكاز (Home Row)</h2>
+        </div>
+
+        <div class="stage-targets-pills">
+          <div class="target-pill" title="الوقت المخصص للمرحلة">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <span>الوقت:</span>
+            <strong id="stage-target-time">60 ث</strong>
+          </div>
+          <div class="target-pill" title="السرعة المطلوبة لاجتياز المرحلة">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            <span>السرعة المستهدفة:</span>
+            <strong id="stage-target-wpm">15+ WPM</strong>
+          </div>
+          <div class="target-pill" title="نسبة الدقة المطلوبة">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            <span>الدقة المستهدفة:</span>
+            <strong id="stage-target-acc">95%+</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage-objective-desc" id="stage-objective-desc">
+        <strong>الهدف التدريبي:</strong> تثبيت السبابتين على نتوءي (ت) و (ب)، وطباعة الحروف المحورية (ك، م، ن، ت | ب، ي، س، ش) دون النظر للوحة.
+      </div>
+
+      <!-- Live Active Finger Prompt Banner -->
+      <div class="finger-live-indicator-banner">
+        <div class="finger-prompt-left">
+          <span class="finger-prompt-label">الأصبع المطلوب حالياً:</span>
+          <div class="active-finger-chip" id="chip-active-finger">
+            <span class="chip-finger-dot" id="chip-finger-dot"></span>
+            <span class="chip-finger-name" id="chip-finger-name">السبابة اليمنى</span>
+          </div>
+          <span class="finger-target-key-chip">المفتاح: <strong id="chip-key-char">ت</strong></span>
+        </div>
+        <div class="finger-posture-tip" id="finger-posture-tip">
+          💡 تلميح: انظر إلى الشاشة وثبت المعصمين برفق
+        </div>
+      </div>
+    </section>
+
+    <!-- HUD Metrics Grid (With Countdown Timer) -->
     <section class="metrics-hud-grid">
+      <!-- Countdown / Remaining Time Card -->
+      <div class="hud-card countdown-hud-card" id="hud-timer-card">
+        <div class="hud-label">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2.5">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span id="label-hud-time">الوقت المتبقي للمرحلة</span>
+        </div>
+        <div class="hud-value" id="hud-time" style="color:var(--sky);">60 <span>ث</span></div>
+        <div class="time-progress-bar-wrap">
+          <div class="time-progress-bar" id="time-progress-fill"></div>
+        </div>
+      </div>
+
+      <!-- WPM Card -->
       <div class="hud-card">
         <div class="hud-label">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5">
             <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
           </svg>
-          <span id="label-hud-wpm">السرعة (WPM)</span>
+          <span id="label-hud-wpm">السرعة اللحظية</span>
         </div>
         <div class="hud-value" id="hud-wpm" style="color:var(--primary);">0 <span>WPM</span></div>
       </div>
 
+      <!-- Accuracy Card -->
       <div class="hud-card">
         <div class="hud-label">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="2.5">
@@ -107,17 +181,7 @@
         <div class="hud-value" id="hud-accuracy" style="color:var(--emerald);">100%</div>
       </div>
 
-      <div class="hud-card">
-        <div class="hud-label">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2.5">
-            <circle cx="12" cy="12" r="10"></circle>
-            <polyline points="12 6 12 12 16 14"></polyline>
-          </svg>
-          <span id="label-hud-time">الوقت المنقضي</span>
-        </div>
-        <div class="hud-value" id="hud-time" style="color:var(--sky);">0 <span>ث</span></div>
-      </div>
-
+      <!-- Errors Card -->
       <div class="hud-card">
         <div class="hud-label">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--rose)" stroke-width="2.5">
@@ -138,53 +202,146 @@
       <div class="lang-mode-bar">
         <div class="lang-segmented-control">
           <button class="lang-tab active" id="tab-lang-ar" data-lang="ar">
-            <span>🇸🇦 التدريب العربي</span>
+            <span>🇸🇦 المسار العربي (6 مراحل)</span>
           </button>
           <button class="lang-tab" id="tab-lang-en" data-lang="en">
-            <span>🇬🇧 English Training</span>
+            <span>🇬🇧 English Track (6 Stages)</span>
           </button>
         </div>
 
-        <div style="font-size:12px; font-weight:700; color:var(--text-dim);" id="tip-start-typing">
-          ابدأ بالطباعة فوراً عبر لوحة المفاتيح
+        <!-- Exercises inside current stage -->
+        <div class="stage-exercise-subselector" id="stage-exercise-subselector">
+          <span style="font-size:12px; font-weight:700; color:var(--text-dim);">التمارين:</span>
+          <div class="exercise-pills-row" id="exercise-pills-row">
+            <!-- Dynamic exercise pills -->
+          </div>
         </div>
       </div>
 
-      <!-- Dynamic Category Pills Container -->
+      <!-- 6 Progressive Stages Navigation Pills -->
       <div class="lesson-category-pills" id="lesson-category-pills">
-        <!-- Rendered via JS based on selected language -->
+        <!-- Rendered via JS based on selected track -->
+      </div>
+
+      <!-- Stage Completion Progress Bar -->
+      <div class="stage-completion-indicator">
+        <div class="stage-comp-labels">
+          <span>إنجاز نص المرحلة:</span>
+          <strong id="stage-comp-text">0%</strong>
+        </div>
+        <div class="stage-comp-track">
+          <div class="stage-comp-bar" id="stage-comp-bar" style="width: 0%;"></div>
+        </div>
       </div>
 
       <!-- Text Display Box -->
       <div class="text-display-box" id="text-display-box" tabindex="0">
         <!-- Character spans injected via JavaScript -->
       </div>
+    </section>
 
-      <!-- Hand Finger Guide Bar -->
-      <div class="finger-guide-bar">
-        <span id="guide-finger-title">توزيع الأصابع على المفاتيح:</span>
-        <div style="display:flex; gap:14px; flex-wrap:wrap;">
-          <div class="finger-guide-item">
-            <span class="finger-dot" style="background:var(--finger-pinky);"></span>
-            <span>الخنصر (Pinky)</span>
-          </div>
-          <div class="finger-guide-item">
-            <span class="finger-dot" style="background:var(--finger-ring);"></span>
-            <span>البنصر (Ring)</span>
-          </div>
-          <div class="finger-guide-item">
-            <span class="finger-dot" style="background:var(--finger-middle);"></span>
-            <span>الوسطى (Middle)</span>
-          </div>
-          <div class="finger-guide-item">
-            <span class="finger-dot" style="background:var(--finger-index);"></span>
-            <span>السبابة (Index)</span>
-          </div>
-          <div class="finger-guide-item">
-            <span class="finger-dot" style="background:var(--finger-thumb);"></span>
-            <span>الإبهام (Space)</span>
-          </div>
+    <!-- Visual Interactive Hands Section (تحديد الأصابع العشرة حياً) -->
+    <section class="visual-hands-section">
+      <div class="visual-hands-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5">
+            <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path>
+            <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path>
+            <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"></path>
+            <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"></path>
+          </svg>
+          <span style="font-size:14px; font-weight:800; color:var(--text-main);">المرشد البصري للأصابع العشرة (Visual Hands Guide)</span>
         </div>
+        <span style="font-size:12px; font-weight:700; color:var(--text-muted);">الأصبع النشط يضيء وينبض لحظياً مع كل حرف</span>
+      </div>
+
+      <!-- Vector Interactive Hands SVG -->
+      <div class="hands-svg-container">
+        <svg class="hands-svg" viewBox="0 0 680 170" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- LEFT HAND (اليد اليسرى) -->
+          <g id="hand-left" class="hand-group">
+            <!-- Left Palm Base -->
+            <path d="M70 120 C70 95, 230 95, 230 120 C230 150, 70 150, 70 120 Z" class="palm-base" />
+            <text x="150" y="145" text-anchor="middle" class="hand-label">اليد اليسرى (Left Hand)</text>
+
+            <!-- L-Pinky (الخنصر الأيسر) -->
+            <g id="finger-l-pinky" class="hand-finger" data-finger="l-pinky">
+              <rect x="75" y="45" width="26" height="60" rx="13" class="finger-capsule" style="--zone-color:var(--finger-pinky);" />
+              <circle cx="88" cy="55" r="7" class="finger-tip-dot" />
+              <text x="88" y="90" text-anchor="middle" class="finger-name-tag">خنصر</text>
+            </g>
+
+            <!-- L-Ring (البنصر الأيسر) -->
+            <g id="finger-l-ring" class="hand-finger" data-finger="l-ring">
+              <rect x="110" y="25" width="26" height="80" rx="13" class="finger-capsule" style="--zone-color:var(--finger-ring);" />
+              <circle cx="123" cy="35" r="7" class="finger-tip-dot" />
+              <text x="123" y="85" text-anchor="middle" class="finger-name-tag">بنصر</text>
+            </g>
+
+            <!-- L-Middle (الوسطى اليسرى) -->
+            <g id="finger-l-middle" class="hand-finger" data-finger="l-middle">
+              <rect x="145" y="12" width="26" height="95" rx="13" class="finger-capsule" style="--zone-color:var(--finger-middle);" />
+              <circle cx="158" cy="22" r="7" class="finger-tip-dot" />
+              <text x="158" y="80" text-anchor="middle" class="finger-name-tag">وسطى</text>
+            </g>
+
+            <!-- L-Index (السبابة اليسرى) -->
+            <g id="finger-l-index" class="hand-finger" data-finger="l-index">
+              <rect x="180" y="25" width="26" height="80" rx="13" class="finger-capsule" style="--zone-color:var(--finger-index);" />
+              <circle cx="193" cy="35" r="7" class="finger-tip-dot" />
+              <text x="193" y="85" text-anchor="middle" class="finger-name-tag">سبابة (ب)</text>
+            </g>
+
+            <!-- L-Thumb (الإبهام الأيسر) -->
+            <g id="finger-l-thumb" class="hand-finger" data-finger="l-thumb">
+              <rect x="220" y="65" width="28" height="52" rx="14" class="finger-capsule" style="--zone-color:var(--finger-thumb);" />
+              <circle cx="234" cy="76" r="7" class="finger-tip-dot" />
+              <text x="234" y="105" text-anchor="middle" class="finger-name-tag">إبهام</text>
+            </g>
+          </g>
+
+          <!-- RIGHT HAND (اليد اليمنى) -->
+          <g id="hand-right" class="hand-group">
+            <!-- Right Palm Base -->
+            <path d="M450 120 C450 95, 610 95, 610 120 C610 150, 450 150, 450 120 Z" class="palm-base" />
+            <text x="530" y="145" text-anchor="middle" class="hand-label">اليد اليمنى (Right Hand)</text>
+
+            <!-- R-Thumb (الإبهام الأيمن) -->
+            <g id="finger-r-thumb" class="hand-finger" data-finger="r-thumb">
+              <rect x="432" y="65" width="28" height="52" rx="14" class="finger-capsule" style="--zone-color:var(--finger-thumb);" />
+              <circle cx="446" cy="76" r="7" class="finger-tip-dot" />
+              <text x="446" y="105" text-anchor="middle" class="finger-name-tag">إبهام</text>
+            </g>
+
+            <!-- R-Index (السبابة اليمنى) -->
+            <g id="finger-r-index" class="hand-finger" data-finger="r-index">
+              <rect x="474" y="25" width="26" height="80" rx="13" class="finger-capsule" style="--zone-color:var(--finger-index);" />
+              <circle cx="487" cy="35" r="7" class="finger-tip-dot" />
+              <text x="487" y="85" text-anchor="middle" class="finger-name-tag">سبابة (ت)</text>
+            </g>
+
+            <!-- R-Middle (الوسطى اليمنى) -->
+            <g id="finger-r-middle" class="hand-finger" data-finger="r-middle">
+              <rect x="509" y="12" width="26" height="95" rx="13" class="finger-capsule" style="--zone-color:var(--finger-middle);" />
+              <circle cx="522" cy="22" r="7" class="finger-tip-dot" />
+              <text x="522" y="80" text-anchor="middle" class="finger-name-tag">وسطى</text>
+            </g>
+
+            <!-- R-Ring (البنصر الأيمن) -->
+            <g id="finger-r-ring" class="hand-finger" data-finger="r-ring">
+              <rect x="544" y="25" width="26" height="80" rx="13" class="finger-capsule" style="--zone-color:var(--finger-ring);" />
+              <circle cx="557" cy="35" r="7" class="finger-tip-dot" />
+              <text x="557" y="85" text-anchor="middle" class="finger-name-tag">بنصر</text>
+            </g>
+
+            <!-- R-Pinky (الخنصر الأيمن) -->
+            <g id="finger-r-pinky" class="hand-finger" data-finger="r-pinky">
+              <rect x="579" y="45" width="26" height="60" rx="13" class="finger-capsule" style="--zone-color:var(--finger-pinky);" />
+              <circle cx="592" cy="55" r="7" class="finger-tip-dot" />
+              <text x="592" y="90" text-anchor="middle" class="finger-name-tag">خنصر</text>
+            </g>
+          </g>
+        </svg>
       </div>
     </section>
 
@@ -286,6 +443,43 @@
 
   </main>
 
+  <!-- Training & Developmental Plan Modal (الخطة التدريبية والتطويرية) -->
+  <div class="modal-overlay" id="modal-roadmap">
+    <div class="modal-card roadmap-modal-card">
+      <div class="modal-header-row">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div class="modal-badge-icon small">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+              <line x1="8" y1="2" x2="8" y2="18"></line>
+              <line x1="16" y1="6" x2="16" y2="22"></line>
+            </svg>
+          </div>
+          <div>
+            <h2 style="font-size:18px; font-weight:800; color:var(--text-main); margin-bottom:2px;">الخطة التدريبية والتطويرية الشاملة</h2>
+            <p style="font-size:12px; color:var(--text-muted);">خارطة طريق تعليمية موجهة لبناء مهارة الطباعة باللمس بدقة واحتراف</p>
+          </div>
+        </div>
+        <button class="btn-close-modal" id="btn-close-roadmap" title="إغلاق النافذة">✕</button>
+      </div>
+
+      <!-- Roadmap Stages Grid -->
+      <div class="roadmap-stages-list" id="roadmap-stages-list">
+        <!-- Rendered via JavaScript -->
+      </div>
+
+      <!-- Ergonomic Tips Footer -->
+      <div class="ergonomic-tips-card">
+        <h3 style="font-size:13px; font-weight:800; color:var(--primary); margin-bottom:6px;">🌟 الإرشادات الصحية للطباعة السليمة (Ergonomics):</h3>
+        <ul style="font-size:12px; line-height:1.7; color:var(--text-muted); padding-right:18px;">
+          <li><strong>استقامة الظهر:</strong> اجلس معتدلاً بزاوية 90 درجة مع راحة القدمين على الأرض.</li>
+          <li><strong>ثبات المعصمين:</strong> لا تضغط بمعصميك بقوة على الطاولة، دعهما يطفوان بمرونة فوق اللوحة.</li>
+          <li><strong>عدم النظر للوحة:</strong> ثق بذاكرتك العضلية وبإرشادات شاشة المرشد البصري للأصابع.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
   <!-- Achievement Modal -->
   <div class="modal-overlay" id="modal-overlay">
     <div class="modal-card">
@@ -297,7 +491,7 @@
       </div>
 
       <div>
-        <h2 style="font-size:20px; font-weight:800; color:var(--text-main); margin-bottom:4px;" id="modal-title">إنجاز رائع! أتممت الدرس بنجاح</h2>
+        <h2 style="font-size:20px; font-weight:800; color:var(--text-main); margin-bottom:4px;" id="modal-title">إنجاز رائع! أتممت المرحلة بنجاح</h2>
         <p style="font-size:13px; color:var(--text-muted);" id="modal-desc">إليك ملخص أدائك وسرعة طباعتك في هذا التمرين:</p>
       </div>
 
@@ -311,18 +505,23 @@
           <span class="modal-score-value" id="modal-accuracy" style="color:var(--emerald);">0%</span>
         </div>
         <div class="modal-score-item">
-          <span class="modal-score-label" id="modal-lbl-strokes">إجمالي الضغطات</span>
-          <span class="modal-score-value" id="modal-keystrokes">0</span>
+          <span class="modal-score-label" id="modal-lbl-time">الوقت المستغرق</span>
+          <span class="modal-score-value" id="modal-elapsed-time">0 ث</span>
         </div>
         <div class="modal-score-item">
-          <span class="modal-score-label" id="modal-lbl-rating">المستوى المحقق</span>
-          <span class="modal-score-value" id="modal-rating" style="font-size:16px;">مبتدئ</span>
+          <span class="modal-score-label" id="modal-lbl-rating">التقييم التربوي</span>
+          <span class="modal-score-value" id="modal-rating" style="font-size:15px;">مبتدئ</span>
         </div>
       </div>
 
+      <!-- Pedagogical Feedback Card -->
+      <div class="pedagogical-feedback-box" id="pedagogical-feedback-box">
+        أحسنت! حققت معايير المرحلة بنجاح؛ انتقل للمرحلة التالية لترقية مستوى سرعتك.
+      </div>
+
       <div style="display:flex; justify-content:center; gap:12px; margin-top:8px;">
-        <button class="btn-pill" id="btn-retry-lesson" style="padding:10px 20px;">إعادة التمرين</button>
-        <button class="btn-pill active" id="btn-next-lesson" style="padding:10px 24px;">الدرس التالي ➔</button>
+        <button class="btn-pill" id="btn-retry-lesson" style="padding:10px 20px;">إعادة المرحلة</button>
+        <button class="btn-pill active" id="btn-next-lesson" style="padding:10px 24px;">المرحلة التالية ➔</button>
       </div>
     </div>
   </div>
