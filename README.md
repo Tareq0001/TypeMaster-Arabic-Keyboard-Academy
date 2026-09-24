@@ -13,29 +13,38 @@
 
 ## 🌟 Key Highlights & Features
 
-### 1. ⌨️ Interactive Visual Dual-Language Keyboard
-- **Dual Label Keycaps:** Physical QWERTY keyboard with full Arabic letters (top right) and English keys (bottom left).
-- **Home Row Tactile Bumps:** Physical visual ridges on the `J` (`ت`) and `F` (`ب`) anchor keys.
-- **Finger Color-Coded Zones:** Color guides for all 5 finger types (Pinky, Ring, Middle, Index, Thumbs).
-- **Target Key Pulse Guide:** The next key to press glows with an animated target pulse in real-time.
-- **Keystroke Press Depression:** Animates tactile key depression upon physical keyboard strikes.
+### 1. 🏎️ Interactive Real-Time Race Track (Player vs Target Ghost)
+- **Real-Time Dual-Lane Raceway:** Race against a dynamic **"Ghost Pacer"** calibrated to the stage's target WPM.
+- **Dynamic Speed Leads:** Live lead differential tracker calculating whether you are leading by `+X` words or trailing the target pacer.
+- **Visual Status Badges:** Color-coded race telemetry (`status-leading`, `status-tied`, `status-trailing`) to drive competitive motivation.
 
-### 2. 📚 Comprehensive Progressive Curriculum
-- **Home Row Mastery (Arabic & English):** Fundamental anchor finger positioning drills (`ت ن م ك` / `ب ي س ش` and `ASDF JKL;`).
-- **All Rows Reach:** Top and bottom row extensions.
-- **Inspiring Wisdom & Quotes:** Full flowing Arabic literature and wisdom sentences.
-- **Code & Tech Snippets:** Practice syntax typing for JavaScript and Python.
+### 2. 🔊 Multi-Soundpack Procedural Synthesizer
+- Pure **Web Audio API** physical sound modeling with **Zero Audio Files / Zero Latency**:
+  - **Cherry MX Blue:** Crisp tactile click and sharp bottom-out ping.
+  - **Vintage Typewriter:** Heavy mechanical strike with spacebar carriage return bell chime!
+  - **Apple Magic (Chiclet):** Cushioned, modern low-profile membrane thud.
+  - **Bubble Pop:** Harmonic ascending water bubble pop.
+  - **Mute Mode:** Complete distraction-free typing.
 
-### 3. 🔊 Synthesized Mechanical Keyboard Sounds
-- Pure **Web Audio API** mechanical switch synthesizer (Cherry MX Blue/Brown tactile click emulation) without loading external audio files.
-- Error alert thuds for incorrect keys and celebration victory arpeggios upon completing a lesson.
-- 1-click sound toggle / mute control.
+### 3. 🎵 Web Audio Metronome Cadence Pacer
+- Periodic rhythmic audio pulse pacer (`60 BPM` / `90 BPM` / `120 BPM` / `180 BPM`).
+- Visual synchronizing beat dot indicator with accent beats to train regular, steady finger cadence and prevent erratic pauses.
 
-### 4. 📊 Real-Time Biometric & Speed Telemetry
-- **Live Net WPM & CPM:** Continuous calculations updated on every keystroke.
-- **Accuracy Percentage:** Precise tracking of correct vs mistyped characters.
-- **Visual Character States:** Correct characters turn emerald green, mistakes glow soft red with underline, and the active cursor blinks smoothly.
-- **Achievement & Certification Modal:** Summarizes performance tiers (*Novice*, *Intermediate*, *Advanced*, *Jet Typer*).
+### 4. ⚡ Speed Sprints & 💀 Sudden Death Mode (Survival)
+- **Speed Sprint Presets:** Rapid burst tests for `15 seconds`, `30 seconds`, and international benchmark `60 seconds`.
+- **Sudden Death Mode (نمط البقاء):** Absolute 100% precision challenge where a single keystroke mistake instantly terminates the run, forcing students to prioritize accuracy before raw speed.
+
+### 5. 📜 Official Printable Student Achievement Certificate
+- **Official Endorsement:** High-fidelity ornamental parchment certificate with royal gold double borders, security watermark, and official seal.
+- **Live Verification:** Custom student name input, verified Net WPM, accuracy percentage, completed stage, and issuance date.
+- **Official Signatures:** Endorsed by **أ. طارق ابوعشي** (Digital Skills Teacher & Platform Architect) and **متوسطة أبها الأهلية (بنين)**.
+- **Print & PDF Export:** Integrated `@media print` CSS engine for landscape A4 printing with zero margins and crisp vector styling.
+
+### 6. 🎯 Smart Focus Mode & Inline Caret HUD
+- **Zero Visual Distraction:** Keeps the student's eyes 100% anchored on upcoming words.
+- **Traveling Finger Caret:** Animated finger indicator travels directly above each target character, removing the need to glance down at the keyboard.
+- **Intelligent Word-Chunking:** Visual token boundaries that train peripheral reading and word-level cognitive planning.
+- **Weakness Radar & Adaptive Practice:** Real-time character error telemetry that auto-generates custom remediation drills for struggling keys.
 
 ---
 

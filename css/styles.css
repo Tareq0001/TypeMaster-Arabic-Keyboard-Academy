@@ -1372,3 +1372,623 @@ body {
     grid-template-columns: 1fr 1fr;
   }
 }
+
+/* ==========================================================
+   SOUNDPACK SELECTOR & METRONOME PACER
+   ========================================================== */
+.soundpack-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+  padding: 6px;
+  min-width: 260px;
+  z-index: 120;
+  animation: fadeInDown 0.15s ease;
+}
+
+.soundpack-dropdown.show {
+  display: block;
+}
+
+.soundpack-opt {
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.soundpack-opt:hover {
+  background: var(--bg-hover);
+}
+
+.soundpack-opt.active {
+  background: var(--primary-dim);
+  color: var(--primary);
+}
+
+.metronome-beat-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--text-dim);
+  display: inline-block;
+  transition: transform 0.08s ease, background-color 0.08s ease;
+}
+
+.metronome-beat-dot.beat-pulse {
+  background: var(--emerald);
+  transform: scale(1.6);
+  box-shadow: 0 0 8px var(--emerald);
+}
+
+.metronome-beat-dot.beat-accent {
+  background: var(--amber);
+  transform: scale(1.9);
+  box-shadow: 0 0 10px var(--amber);
+}
+
+.btn-cert-pill {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  font-weight: 800 !important;
+  box-shadow: 0 2px 6px rgba(217, 119, 6, 0.25) !important;
+}
+
+.btn-cert-pill:hover {
+  opacity: 0.95;
+  transform: translateY(-1px);
+}
+
+/* ==========================================================
+   SPEED SPRINT & CHALLENGE PRESETS BAR
+   ========================================================== */
+.challenge-presets-bar {
+  margin-top: 10px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 8px 14px;
+}
+
+.challenge-presets-wrap {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.challenge-bar-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-muted);
+}
+
+.challenge-buttons-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.btn-challenge-tab {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 13px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-challenge-tab:hover {
+  background: var(--bg-hover);
+  color: var(--text-main);
+}
+
+.btn-challenge-tab.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #ffffff;
+}
+
+.btn-challenge-tab.btn-sudden-death {
+  border-color: var(--rose-border);
+  color: var(--rose);
+}
+
+.btn-challenge-tab.btn-sudden-death.active {
+  background: var(--rose);
+  color: #ffffff;
+  border-color: var(--rose);
+}
+
+/* ==========================================================
+   INTERACTIVE RACE TRACK (PLAYER VS GHOST PACER)
+   ========================================================== */
+.racetrack-section {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 12px 16px;
+  margin-bottom: 14px;
+}
+
+.racetrack-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.racetrack-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.racetrack-status-badge {
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.racetrack-status-badge.status-leading {
+  background: var(--emerald-dim);
+  color: var(--emerald);
+  border: 1px solid var(--emerald-border);
+}
+
+.racetrack-status-badge.status-tied {
+  background: var(--sky-dim);
+  color: var(--sky);
+  border: 1px solid var(--sky-border);
+}
+
+.racetrack-status-badge.status-trailing {
+  background: var(--rose-dim);
+  color: var(--rose);
+  border: 1px solid var(--rose-border);
+}
+
+.racetrack-lanes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.race-lane {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lane-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 95px;
+  flex-shrink: 0;
+}
+
+.lane-tag {
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 6px;
+}
+
+.tag-player {
+  background: var(--primary-dim);
+  color: var(--primary);
+}
+
+.tag-ghost {
+  background: var(--bg-hover);
+  color: var(--text-muted);
+}
+
+.lane-speed {
+  font-size: 10.5px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--text-dim);
+}
+
+.lane-track-wrap {
+  flex: 1;
+  height: 24px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  position: relative;
+  overflow: visible;
+}
+
+.lane-progress {
+  height: 100%;
+  border-radius: 12px;
+  position: relative;
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 14px;
+}
+
+.player-progress {
+  background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+}
+
+.ghost-progress {
+  background: linear-gradient(90deg, #cbd5e1 0%, #94a3b8 100%);
+  opacity: 0.65;
+}
+
+.racer-avatar {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 15px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.25));
+  z-index: 2;
+  transition: transform 0.2s ease;
+}
+
+/* Direction responsive avatar placement */
+[dir="rtl"] .racer-avatar,
+.arabic-active .racer-avatar {
+  left: -8px;
+}
+
+[dir="ltr"] .racer-avatar,
+.english-active .racer-avatar {
+  right: -8px;
+}
+
+.lane-finish-flag {
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+/* ==========================================================
+   OFFICIAL STUDENT CERTIFICATE MODAL & STYLING
+   ========================================================== */
+.certificate-modal-wrapper {
+  max-width: 860px;
+  width: 95%;
+  max-height: 92vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cert-modal-controls {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 12px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.cert-student-input-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 280px;
+}
+
+.cert-input-field {
+  flex: 1;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-subtle);
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.cert-input-field:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: var(--bg-surface);
+}
+
+.certificate-frame {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  user-select: none;
+}
+
+.cert-outer-border {
+  border: 4px double #d97706;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.cert-inner-border {
+  border: 1.5px solid #b45309;
+  border-radius: 6px;
+  padding: 24px 28px;
+  position: relative;
+  background: radial-gradient(circle at center, #ffffff 60%, #fffbeb 100%);
+}
+
+.cert-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-10deg);
+  font-size: 72px;
+  font-weight: 900;
+  font-family: var(--font-sans);
+  color: rgba(217, 119, 6, 0.04);
+  pointer-events: none;
+  letter-spacing: 4px;
+  white-space: nowrap;
+}
+
+.cert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1.5px solid #fef3c7;
+  padding-bottom: 16px;
+}
+
+.cert-logo-side {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cert-badge-crest {
+  font-size: 28px;
+}
+
+.cert-school-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 11px;
+  color: #334155;
+}
+
+.cert-school-meta strong {
+  font-size: 12px;
+  color: #0f172a;
+}
+
+.cert-center-seal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.seal-ring {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: 2px dashed #d97706;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fffbeb;
+  box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.1);
+}
+
+.seal-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 9.5px;
+  font-weight: 900;
+  color: #b45309;
+}
+
+.cert-title-block {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.cert-main-title {
+  font-size: 24px;
+  font-weight: 900;
+  color: #1e3a8a;
+  margin: 0 0 4px 0;
+  font-family: 'Cairo', sans-serif;
+}
+
+.cert-sub-title {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.cert-body {
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.cert-presentation-text {
+  font-size: 13.5px;
+  color: #475569;
+  margin-bottom: 8px;
+}
+
+.cert-recipient-name {
+  font-size: 28px;
+  font-weight: 900;
+  color: #b45309;
+  display: inline-block;
+  padding: 4px 32px;
+  margin: 6px 0 10px 0;
+  border-bottom: 2px solid #fde68a;
+  font-family: 'Cairo', sans-serif;
+}
+
+.cert-statement {
+  font-size: 13px;
+  color: #334155;
+  line-height: 1.7;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.cert-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.cert-metric-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 8px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cert-m-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.cert-m-value {
+  font-size: 20px;
+  font-weight: 900;
+  color: #1e3a8a;
+}
+
+.cert-m-sub {
+  font-size: 10px;
+  color: #94a3b8;
+}
+
+.cert-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px dashed #cbd5e1;
+  padding-top: 16px;
+}
+
+.cert-signature-box {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 11px;
+  color: #475569;
+}
+
+.sig-name {
+  font-size: 14px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.stamp-circle {
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  border: 2px solid #10b981;
+  color: #047857;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  font-weight: 800;
+  transform: rotate(-10deg);
+  background: rgba(16, 185, 129, 0.05);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+.stamp-circle strong {
+  font-size: 8.5px;
+}
+
+/* Print Media Query */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #modal-certificate,
+  #modal-certificate * {
+    visibility: visible;
+  }
+  #modal-certificate {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: transparent !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    z-index: 99999;
+  }
+  .certificate-modal-wrapper {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+  }
+  .certificate-frame {
+    width: 100% !important;
+    height: 100% !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    page-break-inside: avoid;
+  }
+  .no-print {
+    display: none !important;
+  }
+  @page {
+    size: landscape;
+    margin: 8mm;
+  }
+}

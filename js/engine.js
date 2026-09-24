@@ -75,10 +75,11 @@ const KEY_TO_FINGER = {
 };
 
 class TypingEngine {
-  constructor(soundEngine, onUpdateUI, onFinishLesson) {
+  constructor(soundEngine, onUpdateUI, onFinishLesson, onSuddenDeathFail = null) {
     this.sound = soundEngine;
     this.onUpdateUI = onUpdateUI;
     this.onFinishLesson = onFinishLesson;
+    this.onSuddenDeathFail = onSuddenDeathFail;
 
     this.text = '';
     this.currentIndex = 0;
@@ -92,9 +93,14 @@ class TypingEngine {
     this.timerInterval = null;
     this.isFinished = false;
 
-    // Stage Time Management
+    // Stage Time & Speed Targets
     this.timeLimitSeconds = 60;
+    this.targetWpm = 25;
     this.isTimeExpired = false;
+
+    // Sudden Death / Survival Mode (1 error = instant fail)
+    this.isSuddenDeath = false;
+    this.isSuddenDeathFailed = false;
 
     // Current targeted key and finger
     this.currentFinger = null;
@@ -143,10 +149,12 @@ class TypingEngine {
     };
   }
 
-  loadLesson(lessonText, timeLimit = 60) {
+  loadLesson(lessonText, timeLimit = 60, targetWpm = 25, isSuddenDeath = false) {
     this.reset();
     this.text = lessonText.trim();
     this.timeLimitSeconds = timeLimit;
+    this.targetWpm = targetWpm || 25;
+    this.isSuddenDeath = isSuddenDeath;
     this.charStates = new Array(this.text.length).fill('pending');
     this.updateTargetKeyHighlight();
     if (this.onUpdateUI) this.onUpdateUI(this.getMetrics());
@@ -161,6 +169,7 @@ class TypingEngine {
     this.startTime = null;
     this.isFinished = false;
     this.isTimeExpired = false;
+    this.isSuddenDeathFailed = false;
     this.charStates = [];
     this.currentFinger = null;
     this.currentKeyCode = null;
@@ -192,16 +201,31 @@ class TypingEngine {
     if (charPressed === expectedChar) {
       // Correct keystroke
       this.keyTelemetry[expectedChar].correct++;
-      this.sound.playKeyClick();
+      this.sound.playKeyClick(charPressed);
       this.correctCount++;
       this.charStates[this.currentIndex] = 'correct';
       this.currentIndex++;
     } else {
       // Incorrect keystroke
       this.keyTelemetry[expectedChar].incorrect++;
-      this.sound.playErrorSound();
       this.incorrectCount++;
       this.charStates[this.currentIndex] = 'incorrect';
+
+      // Check Sudden Death (Survival Mode)
+      if (this.isSuddenDeath) {
+        this.isSuddenDeathFailed = true;
+        this.isFinished = true;
+        if (this.timerInterval) clearInterval(this.timerInterval);
+        this.sound.playSuddenDeathFail();
+        this.clearTargetKeyHighlight();
+        if (this.onUpdateUI) this.onUpdateUI(this.getMetrics());
+        if (this.onSuddenDeathFail) {
+          this.onSuddenDeathFail(this.getMetrics());
+        }
+        return;
+      }
+
+      this.sound.playErrorSound();
       this.currentIndex++;
     }
 
@@ -216,7 +240,7 @@ class TypingEngine {
   }
 
   handleBackspace() {
-    if (this.currentIndex > 0 && !this.isFinished) {
+    if (this.currentIndex > 0 && !this.isFinished && !this.isSuddenDeath) {
       this.currentIndex--;
       if (this.charStates[this.currentIndex] === 'correct') {
         this.correctCount = Math.max(0, this.correctCount - 1);
@@ -250,6 +274,17 @@ class TypingEngine {
     const accuracy = this.totalKeystrokes > 0 ? Math.round((this.correctCount / this.totalKeystrokes) * 100) : 100;
     const progressPercent = this.text.length > 0 ? Math.round((this.currentIndex / this.text.length) * 100) : 0;
 
+    // Ghost Pacer Telemetry (Linear target speed based on target WPM)
+    const targetCharsPerSec = (this.targetWpm * 5) / 60;
+    const ghostChars = elapsedSeconds * targetCharsPerSec;
+    const ghostProgressPercent = this.text.length > 0 ? Math.min(100, Math.round((ghostChars / this.text.length) * 100)) : 0;
+    const leadDiffChars = this.correctCount - ghostChars;
+    const leadDiffWords = Math.round(leadDiffChars / 5);
+
+    let raceStatus = 'tied';
+    if (leadDiffWords >= 1) raceStatus = 'leading';
+    else if (leadDiffWords <= -1) raceStatus = 'trailing';
+
     // Pedagogical Rating
     let rating = 'مبتدئ';
     if (wpm >= 60) rating = 'طابع نفاث (خبير)';
@@ -264,7 +299,13 @@ class TypingEngine {
       elapsedSeconds,
       remainingSeconds,
       timeLimitSeconds: this.timeLimitSeconds,
+      targetWpm: this.targetWpm,
       progressPercent,
+      ghostProgressPercent,
+      leadDiffWords,
+      raceStatus,
+      isSuddenDeath: this.isSuddenDeath,
+      isSuddenDeathFailed: this.isSuddenDeathFailed,
       correctCount: this.correctCount,
       incorrectCount: this.incorrectCount,
       totalKeystrokes: this.totalKeystrokes,

@@ -31,6 +31,50 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnModeFull = document.getElementById('btn-mode-full');
   const btnModeBlind = document.getElementById('btn-mode-blind');
 
+  // Soundpack & Metronome Controls
+  const btnSoundpackMenu = document.getElementById('btn-soundpack-menu');
+  const soundpackDropdown = document.getElementById('soundpack-dropdown');
+  const soundpackLabel = document.getElementById('soundpack-label');
+  const soundpackIcon = document.getElementById('soundpack-icon');
+  const soundpackOpts = document.querySelectorAll('.soundpack-opt');
+
+  const btnMetronome = document.getElementById('btn-metronome');
+  const metronomeLabel = document.getElementById('metronome-label');
+  const metronomeDot = document.getElementById('metronome-dot');
+
+  // Challenge Preset Buttons
+  const challengeTabs = document.querySelectorAll('.btn-challenge-tab');
+  let currentChallengeMode = 'curriculum'; // 'curriculum', 'sprint15', 'sprint30', 'sprint60', 'survival'
+
+  // Race Track Elements
+  const racePlayerWpm = document.getElementById('race-player-wpm');
+  const raceGhostWpm = document.getElementById('race-ghost-wpm');
+  const racePlayerBar = document.getElementById('race-player-bar');
+  const raceGhostBar = document.getElementById('race-ghost-bar');
+  const raceStatusBadge = document.getElementById('race-status-badge');
+  const raceStatusText = document.getElementById('race-status-text');
+
+  // Sudden Death Modal Elements
+  const modalSuddenDeath = document.getElementById('modal-sudden-death');
+  const sdScoreChars = document.getElementById('sd-score-chars');
+  const sdScoreWpm = document.getElementById('sd-score-wpm');
+  const btnRetrySuddenDeath = document.getElementById('btn-retry-sudden-death');
+  const btnExitSuddenDeath = document.getElementById('btn-exit-sudden-death');
+
+  // Certificate Modal Elements
+  const btnOpenCert = document.getElementById('btn-open-cert');
+  const btnCertFromModal = document.getElementById('btn-cert-from-modal');
+  const modalCertificate = document.getElementById('modal-certificate');
+  const btnCloseCert = document.getElementById('btn-close-cert');
+  const btnPrintCert = document.getElementById('btn-print-cert');
+  const certInputName = document.getElementById('cert-input-name');
+  const certDisplayName = document.getElementById('cert-display-name');
+  const certWpmVal = document.getElementById('cert-wpm-val');
+  const certAccVal = document.getElementById('cert-acc-val');
+  const certStageVal = document.getElementById('cert-stage-val');
+  const certDateVal = document.getElementById('cert-date-val');
+  let lastFinishMetrics = null;
+
   // Weakness Radar Elements
   const weakKeysContainer = document.getElementById('weak-keys-container');
   const btnTriggerAdaptive = document.getElementById('btn-trigger-adaptive');
@@ -323,7 +367,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================================
-  // 6. TYPING ENGINE UI INTEGRATION
+  // 6. TYPING ENGINE UI INTEGRATION & RACE TRACK TELEMETRY
   // ==========================================================
   const onUpdateUI = (metrics) => {
     // 1. HUD Metrics
@@ -351,7 +395,33 @@ document.addEventListener('DOMContentLoaded', () => {
     if (stageCompBar) stageCompBar.style.width = `${metrics.progressPercent}%`;
     if (stageCompText) stageCompText.textContent = `${metrics.progressPercent}%`;
 
-    // 4. Update Weakness Radar Chips
+    // 4. Interactive Race Track (Player vs Ghost Pacer)
+    if (racePlayerWpm) racePlayerWpm.textContent = `${metrics.wpm} WPM`;
+    if (raceGhostWpm) raceGhostWpm.textContent = `${metrics.targetWpm} WPM`;
+    if (racePlayerBar) racePlayerBar.style.width = `${metrics.progressPercent}%`;
+    if (raceGhostBar) raceGhostBar.style.width = `${metrics.ghostProgressPercent}%`;
+
+    if (raceStatusBadge && raceStatusText) {
+      raceStatusBadge.classList.remove('status-leading', 'status-tied', 'status-trailing');
+      if (metrics.raceStatus === 'leading') {
+        raceStatusBadge.classList.add('status-leading');
+        const diff = Math.max(1, metrics.leadDiffWords);
+        raceStatusText.textContent = currentTrack === 'ar' ? `⚡ متصدر بفارق +${diff} كلمة عن الهدف!` : `⚡ Leading by +${diff} words!`;
+      } else if (metrics.raceStatus === 'trailing') {
+        raceStatusBadge.classList.add('status-trailing');
+        const diff = Math.abs(metrics.leadDiffWords);
+        raceStatusText.textContent = currentTrack === 'ar' ? `⚠️ الهدف يتقدم بفارق ${diff} كلمة! زد سرعتك` : `⚠️ Ghost leads by ${diff} words! Pick up speed`;
+      } else {
+        raceStatusBadge.classList.add('status-tied');
+        if (metrics.progressPercent > 0) {
+          raceStatusText.textContent = currentTrack === 'ar' ? `🔥 سباق متقارب جداً!` : `🔥 Neck and neck!`;
+        } else {
+          raceStatusText.textContent = currentTrack === 'ar' ? `جاهز للانطلاق... اكتب للتقدم` : `Ready to race... Type to start`;
+        }
+      }
+    }
+
+    // 5. Update Weakness Radar Chips
     if (weakKeysContainer) {
       if (metrics.weakKeys && metrics.weakKeys.length > 0) {
         weakKeysContainer.innerHTML = metrics.weakKeys.map(w => 
@@ -362,30 +432,31 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // 5. Update Hands SVG (if visible in Full mode)
+    // 6. Update Hands SVG (if visible in Full mode)
     updateVisualHands(metrics.finger);
 
-    // 6. Render Word Chunks and Floating Caret
+    // 7. Render Word Chunks and Floating Caret
     renderTextSpans();
   };
 
   const onFinishLesson = (metrics) => {
+    lastFinishMetrics = metrics;
     const stage = STAGES_DATABASE[currentStageKey];
     if (modalWpm) modalWpm.textContent = `${metrics.wpm} WPM`;
     if (modalAccuracy) modalAccuracy.textContent = `${metrics.accuracy}%`;
-    if (modalElapsedTime) modalElapsedTime.textContent = `${metrics.elapsedSeconds} ث / المستهدف: ${stage ? stage.timeLimitSeconds : 60}ث`;
+    if (modalElapsedTime) modalElapsedTime.textContent = `${metrics.elapsedSeconds} ث / المستهدف: ${metrics.timeLimitSeconds}ث`;
     if (modalRating) modalRating.textContent = metrics.rating;
 
-    const targetWpm = stage ? stage.targetWpm : 25;
+    const targetWpm = metrics.targetWpm || (stage ? stage.targetWpm : 25);
     const targetAcc = stage ? stage.targetAccuracy : 90;
     const passWpm = metrics.wpm >= targetWpm;
     const passAcc = metrics.accuracy >= targetAcc;
     let feedback = '';
 
     if (passWpm && passAcc) {
-      feedback = `🌟 إنجاز متميز! حققت معايير المرحلة بنجاح باهر (دقة ${metrics.accuracy}% وسرعة ${metrics.wpm} WPM). حافظت على تركيز عينيك على الكلمات!`;
+      feedback = `🌟 إنجاز متميز! حققت معايير المرحلة بنجاح باهر (دقة ${metrics.accuracy}% وسرعة ${metrics.wpm} WPM). حافظت على تركيز عينيك على الكلمات وتفوقت على المتسابق الشبح!`;
     } else if (passAcc) {
-      feedback = `👍 دقة أصابعك ممتازة (${metrics.accuracy}%)، ومع تكرار التركيز البصري ستصل لسرعة ${targetWpm} WPM المستهدفة بكل سهولة.`;
+      feedback = `👍 دقة أصابعك ممتازة (${metrics.accuracy}%)، ومع تكرار التمرين ستصل لسرعة ${targetWpm} WPM المستهدفة وتتجاوز الشبح بكل سهولة.`;
     } else {
       feedback = `💡 رائع! تذكر أن الشارة العائمة تتبع الحرف دائماً، لا تنظر للأسفل ودع الذاكرة العضلية تتطور طبيعياً.`;
     }
@@ -394,7 +465,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (modalOverlay) modalOverlay.classList.add('show');
   };
 
-  const engine = new TypingEngine(sound, onUpdateUI, onFinishLesson);
+  const onSuddenDeathFail = (metrics) => {
+    if (sdScoreChars) sdScoreChars.textContent = metrics.correctCount;
+    if (sdScoreWpm) sdScoreWpm.textContent = `${metrics.wpm} WPM`;
+    if (modalSuddenDeath) modalSuddenDeath.classList.add('show');
+    showToast('💀 انتهت المحاولة في نمط البقاء بسبب خطأ واحد!');
+  };
+
+  const engine = new TypingEngine(sound, onUpdateUI, onFinishLesson, onSuddenDeathFail);
 
   // Trigger Adaptive Drill Button
   if (btnTriggerAdaptive) {
@@ -494,11 +572,271 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set keyboard language
     setKeyboardLanguage(stage.lang);
 
-    // Load lesson in engine
-    engine.loadLesson(lesson.text, stage.timeLimitSeconds);
+    // Load lesson in engine with target WPM
+    engine.loadLesson(lesson.text, stage.timeLimitSeconds, stage.targetWpm, false);
     renderExerciseSubpills();
     renderTextSpans();
     if (textDisplayBox) textDisplayBox.focus();
+  }
+
+  // ==========================================================
+  // 8. CHALLENGE PRESETS (SPRINTS & SUDDEN DEATH)
+  // ==========================================================
+  const CHALLENGE_PRESETS = {
+    sprint15: {
+      titleAr: '⚡ سباق 15 ثانية الخاطف',
+      titleEn: '⚡ 15s Rapid Speed Sprint',
+      descAr: 'سباق سرعة نفاث لاختبار انسيابية الأصابع وسرعة رد الفعل في 15 ثانية فقط ضد المتسابق الشبح!',
+      descEn: 'Rapid speed burst test in 15 seconds against the Ghost Pacer!',
+      timeLimit: 15,
+      targetWpm: 35,
+      textAr: 'الطباعة باللمس مهارة حركية رقمية تبني سرعة الإنجاز ودقة الأداء وثقة الطالب في التعامل مع الحاسب.',
+      textEn: 'Touch typing is an essential digital skill that unlocks speed, accuracy, and confidence on any keyboard.'
+    },
+    sprint30: {
+      titleAr: '⚡ سباق 30 ثانية المتقدم',
+      titleEn: '⚡ 30s Speed Sprint',
+      descAr: 'نصف دقيقة من التركيز المتواصل للوصول لأقصى معدل كلمات بالدقيقة!',
+      descEn: '30 seconds of high-velocity typing cadence!',
+      timeLimit: 30,
+      targetWpm: 40,
+      textAr: 'تعد لوحة المفاتيح الأداة الأساسية للإنتاجية الرقمية والتواصل المعرفي الفعال. يحرص الطلاب المتميزون على تدريب أصابعهم العشرة وفق التوزيع الصحيح لضمان انسيابية الكتابة دون النظر.',
+      textEn: 'Mastering proper finger placement allows you to type effortlessly without ever glancing down at the keys. Practice daily with rhythm and precision to boost your productivity.'
+    },
+    sprint60: {
+      titleAr: '⚡ سباق 60 ثانية القياسي (Standard 1 Min)',
+      titleEn: '⚡ 60s Endurance Typing Race',
+      descAr: 'المعيار العالمي لقياس سرعة الطباعة الاحترافية في دقيقة كاملة ضد المتسابق الشبح.',
+      descEn: 'The international 60-second typing test benchmark against the Ghost Pacer.',
+      timeLimit: 60,
+      targetWpm: 45,
+      textAr: 'العلم الرقمي نافذة المستقبل، والطباعة السريعة باللمس تختصر الوقت والجهد وتمنحك تركيزاً كاملاً على صياغة الأفكار والإبداع التقني. واصل تدريبك اليومي بثقة وإصرار، واجعل عينيك مثبتتين دائماً على الشاشة لتبني ذاكرة عضلية فائقة تدوم معك طوال مسيرتك التعليمية والمهنية.',
+      textEn: 'Modern computing demands fast and accurate keyboard interaction. When your fingers know the home row instinctively, your thoughts flow directly into the computer without friction. Keep your eyes on the monitor, maintain a steady cadence, and watch your typing speed accelerate day after day.'
+    },
+    survival: {
+      titleAr: '💀 نمط البقاء (الموت المفاجئ - صفر أخطاء)',
+      titleEn: '💀 Sudden Death Survival Mode',
+      descAr: 'تحدي الدقة المطلقة 100%! خطأ واحد في أي حرف يوقف التحدي فوراً؛ اكتب بحذر وتوازن.',
+      descEn: 'Absolute 100% precision challenge. A single mistake ends the run immediately!',
+      timeLimit: 60,
+      targetWpm: 30,
+      textAr: 'ثبات الأصابع على صف الارتكاز سر الدقة المتناهية والبراعة والتميز الرقمي المستمر دون خطأ مفرد.',
+      textEn: 'Precision without error requires absolute focus and proper hand positioning across every keystroke without mistake.'
+    }
+  };
+
+  function updateChallengeTabsActive() {
+    challengeTabs.forEach(btn => {
+      const mode = btn.getAttribute('data-challenge');
+      btn.classList.toggle('active', mode === currentChallengeMode);
+    });
+  }
+
+  function loadChallengePreset(challengeKey) {
+    currentChallengeMode = challengeKey;
+    updateChallengeTabsActive();
+
+    if (challengeKey === 'curriculum') {
+      loadCurrentStageExercise();
+      showToast('العودة لمسار المنهج 📚');
+      return;
+    }
+
+    const preset = CHALLENGE_PRESETS[challengeKey];
+    if (!preset) return;
+
+    const isArabic = currentTrack === 'ar';
+    const title = isArabic ? preset.titleAr : preset.titleEn;
+    const desc = isArabic ? preset.descAr : preset.descEn;
+    const text = isArabic ? preset.textAr : preset.textEn;
+    const isSuddenDeath = (challengeKey === 'survival');
+
+    if (stageNumBadge) {
+      stageNumBadge.textContent = challengeKey === 'survival' ? '💀 تحدي البقاء' : '⚡ سباق سرعة';
+    }
+    if (stageTitleText) {
+      stageTitleText.textContent = title;
+    }
+    if (stageTargetTime) {
+      stageTargetTime.textContent = `${preset.timeLimit} ث`;
+    }
+    if (stageTargetWpm) {
+      stageTargetWpm.textContent = `${preset.targetWpm}+ WPM`;
+    }
+    if (stageTargetAcc) {
+      stageTargetAcc.textContent = isSuddenDeath ? '100% (إلزامي)' : '95%+';
+    }
+    if (stageObjectiveDesc) {
+      stageObjectiveDesc.innerHTML = `<strong>الهدف:</strong> ${desc}`;
+    }
+
+    engine.loadLesson(text, preset.timeLimit, preset.targetWpm, isSuddenDeath);
+    renderTextSpans();
+    if (textDisplayBox) textDisplayBox.focus();
+
+    if (isSuddenDeath) {
+      showToast('💀 نمط البقاء: خطأ واحد ينهي الجولة فوراً!');
+    } else {
+      showToast(`تم بدء: ${title}`);
+    }
+  }
+
+  challengeTabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const mode = btn.getAttribute('data-challenge');
+      loadChallengePreset(mode);
+    });
+  });
+
+  // Sudden Death Modal Buttons
+  if (btnRetrySuddenDeath) {
+    btnRetrySuddenDeath.addEventListener('click', () => {
+      if (modalSuddenDeath) modalSuddenDeath.classList.remove('show');
+      loadChallengePreset('survival');
+    });
+  }
+
+  if (btnExitSuddenDeath) {
+    btnExitSuddenDeath.addEventListener('click', () => {
+      if (modalSuddenDeath) modalSuddenDeath.classList.remove('show');
+      loadChallengePreset('curriculum');
+    });
+  }
+
+  if (modalSuddenDeath) {
+    modalSuddenDeath.addEventListener('click', (e) => {
+      if (e.target === modalSuddenDeath) modalSuddenDeath.classList.remove('show');
+    });
+  }
+
+  // ==========================================================
+  // 9. SOUNDPACK DROPDOWN & METRONOME CONTROLLER
+  // ==========================================================
+  if (btnSoundpackMenu && soundpackDropdown) {
+    btnSoundpackMenu.addEventListener('click', (e) => {
+      e.stopPropagation();
+      soundpackDropdown.classList.toggle('show');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!btnSoundpackMenu.contains(e.target) && !soundpackDropdown.contains(e.target)) {
+        soundpackDropdown.classList.remove('show');
+      }
+    });
+
+    soundpackOpts.forEach(opt => {
+      opt.addEventListener('click', () => {
+        const pack = opt.getAttribute('data-pack');
+        sound.setSoundpack(pack);
+
+        soundpackOpts.forEach(o => o.classList.remove('active'));
+        opt.classList.add('active');
+
+        const labels = {
+          cherry: { icon: '🔊', name: 'Cherry MX' },
+          typewriter: { icon: '⌨️', name: 'آلة كاتبة' },
+          chiclet: { icon: '💻', name: 'أبل ماجيك' },
+          bubble: { icon: '🫧', name: 'فقاعات' },
+          mute: { icon: '🔇', name: 'صامت' }
+        };
+
+        const currentMeta = labels[pack] || labels.cherry;
+        if (soundpackIcon) soundpackIcon.textContent = currentMeta.icon;
+        if (soundpackLabel) soundpackLabel.textContent = currentMeta.name;
+        soundpackDropdown.classList.remove('show');
+        showToast(`حزمة الصوت: ${currentMeta.name}`);
+        sound.playKeyClick(' ');
+      });
+    });
+  }
+
+  // Metronome Cadence Pacer
+  const metronomeSpeeds = [0, 60, 90, 120, 180];
+  let currentMetronomeIndex = 0;
+
+  if (btnMetronome) {
+    btnMetronome.addEventListener('click', () => {
+      currentMetronomeIndex = (currentMetronomeIndex + 1) % metronomeSpeeds.length;
+      const bpm = metronomeSpeeds[currentMetronomeIndex];
+
+      sound.setMetronome(bpm, (beatCount, isAccent) => {
+        if (!metronomeDot) return;
+        metronomeDot.classList.remove('beat-pulse', 'beat-accent');
+        void metronomeDot.offsetWidth; // Force reflow
+        metronomeDot.classList.add(isAccent ? 'beat-accent' : 'beat-pulse');
+        setTimeout(() => {
+          if (metronomeDot) metronomeDot.classList.remove('beat-pulse', 'beat-accent');
+        }, 110);
+      });
+
+      if (bpm === 0) {
+        if (metronomeLabel) metronomeLabel.textContent = 'إيقاف';
+        btnMetronome.classList.remove('active');
+        showToast('تم إيقاف بندول الإيقاع');
+      } else {
+        const approxWpm = Math.round(bpm / 5);
+        if (metronomeLabel) metronomeLabel.textContent = `${bpm} BPM (${approxWpm} WPM)`;
+        btnMetronome.classList.add('active');
+        showToast(`🎵 الإيقاع الصوتي: ${bpm} نقرة/دقيقة (${approxWpm} WPM)`);
+      }
+    });
+  }
+
+  // ==========================================================
+  // 10. OFFICIAL STUDENT CERTIFICATE GENERATOR
+  // ==========================================================
+  function openCertificateModal() {
+    const studentName = certInputName ? certInputName.value.trim() : 'عبدالرحمن طارق ابوعشي';
+    if (certDisplayName) certDisplayName.textContent = studentName || 'طالب متميز';
+
+    const stage = STAGES_DATABASE[currentStageKey];
+    const metrics = engine.getMetrics();
+    const wpm = (lastFinishMetrics && lastFinishMetrics.wpm) ? lastFinishMetrics.wpm : (metrics.wpm > 0 ? metrics.wpm : (stage ? stage.targetWpm : 35));
+    const acc = (lastFinishMetrics && lastFinishMetrics.accuracy) ? lastFinishMetrics.accuracy : (metrics.accuracy < 100 ? metrics.accuracy : 98);
+
+    if (certWpmVal) certWpmVal.textContent = `${wpm} WPM`;
+    if (certAccVal) certAccVal.textContent = `${acc}%`;
+    if (certStageVal) certStageVal.textContent = stage ? `${stage.title}` : 'المسار التدريبي الكامل';
+
+    const now = new Date();
+    const dateStr = `${now.getFullYear()}/${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getDate().toString().padStart(2, '0')} م`;
+    if (certDateVal) certDateVal.textContent = dateStr;
+
+    if (modalCertificate) modalCertificate.classList.add('show');
+  }
+
+  if (btnOpenCert) {
+    btnOpenCert.addEventListener('click', openCertificateModal);
+  }
+
+  if (btnCertFromModal) {
+    btnCertFromModal.addEventListener('click', openCertificateModal);
+  }
+
+  if (btnCloseCert) {
+    btnCloseCert.addEventListener('click', () => {
+      if (modalCertificate) modalCertificate.classList.remove('show');
+    });
+  }
+
+  if (modalCertificate) {
+    modalCertificate.addEventListener('click', (e) => {
+      if (e.target === modalCertificate) modalCertificate.classList.remove('show');
+    });
+  }
+
+  if (certInputName) {
+    certInputName.addEventListener('input', () => {
+      if (certDisplayName) {
+        certDisplayName.textContent = certInputName.value.trim() || 'طالب متميز';
+      }
+    });
+  }
+
+  if (btnPrintCert) {
+    btnPrintCert.addEventListener('click', () => {
+      window.print();
+    });
   }
 
   // Language Tabs
@@ -509,6 +847,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (tabLangEn) tabLangEn.classList.remove('active');
       currentStageKey = 'stage_ar_1';
       currentExerciseIndex = 0;
+      currentChallengeMode = 'curriculum';
+      updateChallengeTabsActive();
       setKeyboardLanguage('ar');
       renderStagePills();
       loadCurrentStageExercise();
@@ -523,6 +863,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (tabLangAr) tabLangAr.classList.remove('active');
       currentStageKey = 'stage_en_1';
       currentExerciseIndex = 0;
+      currentChallengeMode = 'curriculum';
+      updateChallengeTabsActive();
       setKeyboardLanguage('en');
       renderStagePills();
       loadCurrentStageExercise();

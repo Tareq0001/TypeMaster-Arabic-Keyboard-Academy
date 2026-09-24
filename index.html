@@ -71,13 +71,32 @@
         <span id="theme-label">الوضع الداكن</span>
       </button>
 
-      <!-- Mechanical Sound Toggle -->
-      <button class="btn-pill active" id="btn-toggle-sound" title="تفعيل أو كتم نقرات المفاتيح الميكانيكية">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-        </svg>
-        <span>نقرات الكيبورد</span>
+      <!-- Mechanical Soundpack Selector -->
+      <div class="soundpack-selector-wrap" style="position:relative;">
+        <button class="btn-pill" id="btn-soundpack-menu" title="اختيار حزمة المؤثرات الصوتية">
+          <span id="soundpack-icon">🔊</span>
+          <span id="soundpack-label">Cherry MX</span>
+        </button>
+        <div class="soundpack-dropdown" id="soundpack-dropdown">
+          <div class="soundpack-opt active" data-pack="cherry">🔊 ميكانيكي (Cherry MX Blue)</div>
+          <div class="soundpack-opt" data-pack="typewriter">⌨️ آلة كاتبة كلاسيكية (مع جرس السطر)</div>
+          <div class="soundpack-opt" data-pack="chiclet">💻 أبل ماجيك (Chiclet هادئ)</div>
+          <div class="soundpack-opt" data-pack="bubble">🫧 فقاعات مائية لطيفة</div>
+          <div class="soundpack-opt" data-pack="mute">🔇 كتم المؤثرات الصوتية</div>
+        </div>
+      </div>
+
+      <!-- Metronome Cadence Pacer -->
+      <button class="btn-pill" id="btn-metronome" title="بندول الإيقاع الصوتي لتنظيم وتوحيد سرعة نقر الأصابع">
+        <span class="metronome-beat-dot" id="metronome-dot"></span>
+        <span>🎵 الإيقاع:</span>
+        <strong id="metronome-label">إيقاف</strong>
+      </button>
+
+      <!-- Student Certificate Button -->
+      <button class="btn-pill btn-cert-pill" id="btn-open-cert" title="إصدار وطباعة شهادة الإتقان الرسمية للطلاب المتميزين">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+        <span>شهادة الإتقان 📜</span>
       </button>
 
       <!-- Reset Practice Button -->
@@ -121,6 +140,20 @@
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
           <span>توليد تدريب ذكي لنقاط ضعفي</span>
         </button>
+      </div>
+    </section>
+
+    <!-- Speed Sprint & Challenge Mode Preset Bar -->
+    <section class="challenge-presets-bar">
+      <div class="challenge-presets-wrap">
+        <span class="challenge-bar-title">⏱️ تحديات السرعة والبقاء:</span>
+        <div class="challenge-buttons-group">
+          <button class="btn-challenge-tab active" data-challenge="curriculum">📚 مسار المنهج</button>
+          <button class="btn-challenge-tab" data-challenge="sprint15">⚡ سباق 15 ثانية</button>
+          <button class="btn-challenge-tab" data-challenge="sprint30">⚡ سباق 30 ثانية</button>
+          <button class="btn-challenge-tab" data-challenge="sprint60">⚡ سباق 60 ثانية</button>
+          <button class="btn-challenge-tab btn-sudden-death" data-challenge="survival" title="تحدي الموت المفاجئ: خطأ واحد ينهي الجولة فوراً!">💀 نمط البقاء (صفر أخطاء)</button>
+        </div>
       </div>
     </section>
 
@@ -248,6 +281,49 @@
           <div class="stage-comp-bar" id="stage-comp-bar" style="width: 0%;"></div>
         </div>
       </div>
+
+      <!-- Interactive Race Track (Player vs Ghost Pacer) -->
+      <section class="racetrack-section" id="racetrack-section">
+        <div class="racetrack-header">
+          <div class="racetrack-title">
+            <span class="race-flag-icon">🏁</span>
+            <span>ميدان السباق اللحظي ضد المتسابق الشبح (Target Ghost Racer)</span>
+          </div>
+          <div class="racetrack-status-badge status-tied" id="race-status-badge">
+            <span id="race-status-text">جاهز للانطلاق... اكتب للتقدم</span>
+          </div>
+        </div>
+
+        <div class="racetrack-lanes">
+          <!-- Player Lane -->
+          <div class="race-lane player-lane">
+            <div class="lane-label">
+              <span class="lane-tag tag-player">أنت 🏎️</span>
+              <span class="lane-speed" id="race-player-wpm">0 WPM</span>
+            </div>
+            <div class="lane-track-wrap">
+              <div class="lane-progress player-progress" id="race-player-bar" style="width: 0%;">
+                <div class="racer-avatar racer-player" id="racer-player-avatar">🏎️</div>
+              </div>
+            </div>
+            <div class="lane-finish-flag">🏁</div>
+          </div>
+
+          <!-- Ghost Lane -->
+          <div class="race-lane ghost-lane">
+            <div class="lane-label">
+              <span class="lane-tag tag-ghost">الهدف 👻</span>
+              <span class="lane-speed" id="race-ghost-wpm">25 WPM</span>
+            </div>
+            <div class="lane-track-wrap">
+              <div class="lane-progress ghost-progress" id="race-ghost-bar" style="width: 0%;">
+                <div class="racer-avatar racer-ghost" id="racer-ghost-avatar">👻</div>
+              </div>
+            </div>
+            <div class="lane-finish-flag">🏁</div>
+          </div>
+        </div>
+      </section>
 
       <!-- Text Display Box (With Word Chunking & Inline Floating Finger Caret) -->
       <div class="text-display-box" id="text-display-box" tabindex="0">
@@ -522,9 +598,154 @@
         أحسنت! حققت معايير المرحلة بنجاح؛ انتقل للمرحلة التالية لترقية مستوى سرعتك.
       </div>
 
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:8px;">
-        <button class="btn-pill" id="btn-retry-lesson" style="padding:10px 20px;">إعادة المرحلة</button>
-        <button class="btn-pill active" id="btn-next-lesson" style="padding:10px 24px;">المرحلة التالية ➔</button>
+      <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:10px; margin-top:8px;">
+        <button class="btn-pill" id="btn-retry-lesson" style="padding:10px 18px;">إعادة المرحلة 🔁</button>
+        <button class="btn-pill btn-cert-pill" id="btn-cert-from-modal" style="padding:10px 18px;">إصدار شهادة الإتقان 📜</button>
+        <button class="btn-pill active" id="btn-next-lesson" style="padding:10px 22px;">المرحلة التالية ➔</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sudden Death Game Over Modal -->
+  <div class="modal-overlay" id="modal-sudden-death">
+    <div class="modal-card sudden-death-card">
+      <div class="modal-badge-icon" style="background:var(--rose-dim); color:var(--rose); border:1px solid var(--rose-border);">
+        💀
+      </div>
+      <div>
+        <h2 style="font-size:20px; font-weight:800; color:var(--rose); margin-bottom:4px;">انتهى التحدي في نمط البقاء!</h2>
+        <p style="font-size:13px; color:var(--text-muted); line-height:1.6;">
+          في <strong>نمط البقاء (Sudden Death)</strong>، يُشترط صفر أخطاء تماماً. أي خطأ مفرد يوقف التحدي لتعويدك على الدقة المطلقة بنسبة 100%.
+        </p>
+      </div>
+
+      <div class="modal-score-grid" style="margin:12px 0;">
+        <div class="modal-score-item">
+          <span class="modal-score-label">الحروف الصحيحة قبل التعثر</span>
+          <span class="modal-score-value" id="sd-score-chars" style="color:var(--emerald);">0</span>
+        </div>
+        <div class="modal-score-item">
+          <span class="modal-score-label">السرعة قبل التوقف</span>
+          <span class="modal-score-value" id="sd-score-wpm">0 WPM</span>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:center; gap:10px; margin-top:6px;">
+        <button class="btn-pill active" id="btn-retry-sudden-death" style="background:var(--rose); border-color:var(--rose); padding:10px 22px;">إعادة المحاولة 🔁</button>
+        <button class="btn-pill" id="btn-exit-sudden-death" style="padding:10px 20px;">العودة للمنهج 📚</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Printable Official Achievement Certificate Modal -->
+  <div class="modal-overlay" id="modal-certificate">
+    <div class="certificate-modal-wrapper">
+      <div class="cert-modal-controls no-print">
+        <div class="cert-student-input-group">
+          <label for="cert-input-name" style="font-size:13px; font-weight:800; color:var(--text-main);">اسم الطالب للتكريم بالشهادة:</label>
+          <input type="text" id="cert-input-name" class="cert-input-field" placeholder="اكتب اسم الطالب هنا..." value="عبدالرحمن طارق ابوعشي">
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn-pill active" id="btn-print-cert">🖨️ طباعة الشهادة / تصدير PDF</button>
+          <button class="btn-pill" id="btn-close-cert">✖️ إغلاق</button>
+        </div>
+      </div>
+
+      <!-- Official Certificate Frame (Printable Canvas Area) -->
+      <div class="certificate-frame" id="printable-certificate">
+        <div class="cert-outer-border">
+          <div class="cert-inner-border">
+            <!-- Watermark Background -->
+            <div class="cert-watermark">TYPEMASTER</div>
+
+            <!-- Certificate Header -->
+            <div class="cert-header">
+              <div class="cert-logo-side">
+                <div class="cert-badge-crest">🇸🇦</div>
+                <div class="cert-school-meta">
+                  <strong>المملكة العربية السعودية</strong>
+                  <span>وزارة التعليم</span>
+                  <span>متوسطة أبها الأهلية (بنين)</span>
+                </div>
+              </div>
+              <div class="cert-center-seal">
+                <div class="seal-ring">
+                  <div class="seal-inner">
+                    <span>إتقان</span>
+                    <strong>2026</strong>
+                  </div>
+                </div>
+              </div>
+              <div class="cert-logo-side" style="text-align:left; direction:ltr;">
+                <strong>Digital Skills Academy</strong>
+                <span>Abha Ahliya Middle School</span>
+                <span>Touch Typing Certification</span>
+              </div>
+            </div>
+
+            <!-- Certificate Title -->
+            <div class="cert-title-block">
+              <h1 class="cert-main-title">شهادة تميز وإتقان الطباعة باللمس</h1>
+              <p class="cert-sub-title">Touch Typing Professional Mastery Certificate</p>
+            </div>
+
+            <!-- Certificate Body Text -->
+            <div class="cert-body">
+              <p class="cert-presentation-text">
+                تشهد إدارة متوسطة أبها الأهلية ومعلم المهارات الرقمية بأن الطالب:
+              </p>
+              <h2 class="cert-recipient-name" id="cert-display-name">عبدالرحمن طارق ابوعشي</h2>
+              <p class="cert-statement">
+                قد اجتاز بنجاح واقتدار متطلبات تدريب الطباعة باللمس السريعة (Touch Typing Standard)، وأظهر براعة عالية في الذاكرة العضلية وتوزيع الأصابع العشرة على لوحة المفاتيح وفق معايير المنصة المعتمدة.
+              </p>
+            </div>
+
+            <!-- Verified Metrics Badges Grid -->
+            <div class="cert-metrics-grid">
+              <div class="cert-metric-box">
+                <span class="cert-m-label">سرعة الطباعة المحققة</span>
+                <strong class="cert-m-value" id="cert-wpm-val">38 WPM</strong>
+                <span class="cert-m-sub">كلمة بالدقيقة</span>
+              </div>
+              <div class="cert-metric-box">
+                <span class="cert-m-label">نسبة الدقة المعتمدة</span>
+                <strong class="cert-m-value" id="cert-acc-val">98%</strong>
+                <span class="cert-m-sub">معيار الدقة الاحترافية</span>
+              </div>
+              <div class="cert-metric-box">
+                <span class="cert-m-label">المرحلة المنجزة</span>
+                <strong class="cert-m-value" id="cert-stage-val" style="font-size:14px;">المرحلة 1: صف الارتكاز</strong>
+                <span class="cert-m-sub">المسار العربي</span>
+              </div>
+              <div class="cert-metric-box">
+                <span class="cert-m-label">تاريخ التوثيق</span>
+                <strong class="cert-m-value" id="cert-date-val" style="font-size:14px;">1448/03/12 هـ</strong>
+                <span class="cert-m-sub">توثيق الأكاديمية الرقمية</span>
+              </div>
+            </div>
+
+            <!-- Signatures Footer -->
+            <div class="cert-footer">
+              <div class="cert-signature-box">
+                <span class="sig-title">معلم المادة ومصمم المنصة:</span>
+                <strong class="sig-name">أ. طارق ابوعشي</strong>
+                <span class="sig-role">معلم المهارات الرقمية</span>
+              </div>
+              <div class="cert-official-stamp">
+                <div class="stamp-circle">
+                  <span>معتمد رسمياً</span>
+                  <strong>متوسطة أبها الأهلية</strong>
+                  <span>قسم المهارات الرقمية</span>
+                </div>
+              </div>
+              <div class="cert-signature-box">
+                <span class="sig-title">الاعتماد التقني:</span>
+                <strong class="sig-name">أكاديمية TypeMaster</strong>
+                <span class="sig-role">منصة التدريب التفاعلي</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
