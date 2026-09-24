@@ -1,6 +1,6 @@
 /* ==========================================================
    TypeMaster Academy | Touch Typing & Keyboard Speed Suite
-   Comprehensive Pedagogical Design & Visual Hands Engine
+   Comprehensive Pedagogical Design & Smart Focus Caret Engine
    Apple & Duolingo Inspired Clean Aesthetics + Dark Theme
    ========================================================== */
 
@@ -187,6 +187,7 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .btn-pill {
@@ -243,18 +244,115 @@ body {
   padding: 20px 20px 40px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
   width: 100%;
 }
 
 /* ==========================================================
-   PEDAGOGICAL STAGE CARD & ACTIVE FINGER BANNER
+   SMART FOCUS & TRAINING MODE BAR
+   ========================================================== */
+.smart-mode-selector-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 10px 18px;
+  box-shadow: var(--shadow-sm);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.smart-mode-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mode-control-group {
+  display: inline-flex;
+  background: var(--bg-subtle);
+  padding: 3px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  gap: 4px;
+}
+
+.btn-mode-tab {
+  padding: 6px 14px;
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-muted);
+  border-radius: 7px;
+  cursor: pointer;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.btn-mode-tab:hover {
+  color: var(--text-main);
+}
+
+.btn-mode-tab.active {
+  background: var(--bg-surface);
+  color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Weakness Radar Mini Bar */
+.weakness-radar-widget {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.weakness-chip-tag {
+  font-size: 11px;
+  font-weight: 800;
+  background: var(--rose-dim);
+  color: var(--rose);
+  border: 1px solid var(--rose-border);
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+}
+
+.btn-adaptive-drill {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  border: none;
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+  transition: all 0.15s ease;
+}
+
+.btn-adaptive-drill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);
+}
+
+/* ==========================================================
+   PEDAGOGICAL STAGE CARD
    ========================================================== */
 .stage-info-card {
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
   border-radius: 16px;
-  padding: 18px 22px;
+  padding: 16px 20px;
   box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
@@ -286,7 +384,7 @@ body {
 }
 
 .stage-title-text {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 800;
   color: var(--text-main);
 }
@@ -319,7 +417,7 @@ body {
   line-height: 1.6;
   color: var(--text-muted);
   background: var(--bg-subtle);
-  padding: 10px 14px;
+  padding: 9px 14px;
   border-radius: 10px;
   border-right: 3px solid var(--primary);
 }
@@ -327,84 +425,6 @@ body {
 [dir="ltr"] .stage-objective-desc {
   border-right: none;
   border-left: 3px solid var(--primary);
-}
-
-/* Finger Live Indicator Banner */
-.finger-live-indicator-banner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: linear-gradient(90deg, var(--bg-subtle), var(--bg-surface));
-  border: 1px dashed var(--border-color);
-  border-radius: 12px;
-  padding: 10px 16px;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.finger-prompt-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.finger-prompt-label {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text-muted);
-}
-
-.active-finger-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--bg-surface);
-  border: 1.5px solid var(--emerald);
-  padding: 5px 14px;
-  border-radius: 20px;
-  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
-}
-
-.chip-finger-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--emerald);
-  animation: dotPulse 1s infinite alternate;
-}
-
-@keyframes dotPulse {
-  0% { transform: scale(0.9); opacity: 0.7; }
-  100% { transform: scale(1.3); opacity: 1; }
-}
-
-.chip-finger-name {
-  font-size: 13px;
-  font-weight: 800;
-  color: var(--text-main);
-}
-
-.finger-target-key-chip {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text-muted);
-}
-
-.finger-target-key-chip strong {
-  background: var(--primary-dim);
-  color: var(--primary);
-  border: 1px solid var(--primary-border);
-  padding: 2px 8px;
-  border-radius: 6px;
-  font-size: 15px;
-  font-family: var(--font-mono);
-}
-
-.finger-posture-tip {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--amber);
 }
 
 /* ==========================================================
@@ -454,7 +474,7 @@ body {
   color: var(--text-dim);
 }
 
-/* Countdown Time Progress Bar inside HUD */
+/* Countdown Time Progress Bar */
 .time-progress-bar-wrap {
   width: 100%;
   height: 4px;
@@ -482,7 +502,7 @@ body {
 }
 
 /* ==========================================================
-   LESSON & TYPING CARD
+   LESSON & TYPING CARD (SMART FOCUS WORD DISPLAY)
    ========================================================== */
 .lesson-card {
   background: var(--bg-surface);
@@ -631,33 +651,66 @@ body {
   transition: width 0.2s ease;
 }
 
-/* Text Display Box */
+/* ==========================================================
+   SMART TEXT DISPLAY BOX & WORD CHUNKING
+   ========================================================== */
 .text-display-box {
   background: var(--text-display-bg);
   border: 2px solid var(--border-color);
-  border-radius: 14px;
-  padding: 24px 26px;
-  min-height: 125px;
-  font-size: 25px;
-  line-height: 1.8;
+  border-radius: 16px;
+  padding: 34px 28px 24px;
+  min-height: 140px;
+  font-size: 28px;
+  line-height: 2.2;
   font-weight: 600;
   letter-spacing: 0.5px;
   user-select: none;
   outline: none;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
   word-break: break-word;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, font-size 0.2s ease;
+  position: relative;
 }
 
 .text-display-box:focus {
   border-color: var(--primary);
 }
 
+/* Word Token Grouping (Reading Chunks) */
+.word-token {
+  display: inline-block;
+  padding: 2px 4px;
+  margin: 0 2px;
+  border-radius: 8px;
+  transition: background-color 0.15s ease;
+  position: relative;
+}
+
+.word-token.word-current {
+  background: rgba(79, 70, 229, 0.08);
+  border-bottom: 2px solid var(--primary);
+}
+
+[data-theme="dark"] .word-token.word-current {
+  background: rgba(129, 140, 248, 0.12);
+}
+
+.word-token.word-completed {
+  opacity: 0.85;
+}
+
+.word-token.word-upcoming {
+  opacity: 0.6;
+}
+
 /* Character States */
+.char-span {
+  position: relative;
+  display: inline-block;
+}
+
 .char-correct {
   color: var(--emerald);
-  background: var(--emerald-dim);
-  border-radius: 3px;
 }
 
 .char-incorrect {
@@ -675,13 +728,85 @@ body {
   position: relative;
   background: var(--primary-dim);
   color: var(--primary);
-  border-radius: 3px;
-  animation: pulseCurrent 0.9s infinite alternate;
+  border-radius: 4px;
+  font-weight: 800;
 }
 
-@keyframes pulseCurrent {
-  0% { box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2); }
-  100% { box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.45); }
+/* ==========================================================
+   THE SECRET WEAPON: INLINE FLOATING FINGER CARET HUD
+   Keeps student's eyes 100% focused on the active word & letter!
+   ========================================================== */
+.inline-finger-caret {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-surface);
+  border: 1.5px solid var(--caret-color, var(--emerald));
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  padding: 3px 9px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-main);
+  pointer-events: none;
+  z-index: 40;
+  animation: caretFloat 0.7s infinite alternate ease-in-out;
+}
+
+.inline-finger-caret::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--caret-color, var(--emerald)) transparent transparent transparent;
+}
+
+.caret-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--caret-color, var(--emerald));
+}
+
+@keyframes caretFloat {
+  0% { transform: translateX(-50%) translateY(0); }
+  100% { transform: translateX(-50%) translateY(-3px); }
+}
+
+/* ==========================================================
+   SMART FOCUS MODE CONDITIONAL RENDERING
+   When Smart Focus Mode is active: Collapse big hands & keyboard
+   to keep 100% visual focus on the text reading area!
+   ========================================================== */
+.focus-mode-active .visual-hands-section,
+.focus-mode-active .keyboard-section {
+  display: none !important;
+}
+
+.focus-mode-active .text-display-box {
+  min-height: 180px;
+  font-size: 32px;
+  padding: 40px 32px 30px;
+}
+
+/* BLINDFOLD MODE (تعمية اللوحة) */
+.blindfold-mode-active .key-char-ar,
+.blindfold-mode-active .key-char-en {
+  opacity: 0 !important;
+}
+
+.blindfold-mode-active .key-cap::after {
+  content: '•';
+  font-size: 14px;
+  color: var(--text-dim);
 }
 
 /* ==========================================================
@@ -854,7 +979,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 7px;
-  direction: ltr; /* Physical hardware is LTR */
+  direction: ltr;
 }
 
 .keyboard-row {
@@ -938,7 +1063,7 @@ body {
   display: block !important;
 }
 
-/* Tactile bumps on Home Row J / ت and F / ب */
+/* Tactile bumps */
 .key-cap.has-bump::after {
   content: '';
   position: absolute;
@@ -979,7 +1104,7 @@ body {
 .key-finger-thumb::before { background: var(--finger-thumb); }
 
 /* ==========================================================
-   ROADMAP MODAL (الخطة التدريبية والتطويرية)
+   ROADMAP MODAL
    ========================================================== */
 .modal-overlay {
   position: fixed;
@@ -1134,7 +1259,7 @@ body {
   padding: 14px 18px;
 }
 
-/* Pedagogical feedback box in achievement modal */
+/* Pedagogical feedback box */
 .pedagogical-feedback-box {
   background: var(--emerald-dim);
   border: 1px solid var(--emerald-border);
@@ -1236,7 +1361,7 @@ body {
   }
   .key-char-ar { font-size: 14px; }
   .key-char-en { font-size: 13px; }
-  .text-display-box { font-size: 20px; }
+  .text-display-box { font-size: 22px; }
 }
 
 @media (max-width: 600px) {
@@ -1245,9 +1370,5 @@ body {
   }
   .metrics-hud-grid {
     grid-template-columns: 1fr 1fr;
-  }
-  .stage-meta-header {
-    flex-direction: column;
-    align-items: flex-start;
   }
 }

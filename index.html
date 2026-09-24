@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TypeMaster Academy | أكاديمية تعليم الطباعة باللمس والخطة التدريبية</title>
-  <meta name="description" content="أكاديمية تعليمية متكاملة لتعليم الطباعة باللمس والكتابة السريعة وفق مراحل تدريبية وتطويرية محددة بوقت، مع محاكاة بصرية للأصابع العشرة ولوحة مفاتيح تفاعلية.">
+  <title>TypeMaster Academy | أكاديمية تعليم الطباعة باللمس والتركيز البصري الذكي</title>
+  <meta name="description" content="أكاديمية تعليمية متطورة لتعليم الكتابة السريعة عبر تقنية التركيز البصري الذكي والشارة العائمة فوق الحرف لمنع تشتت العينين والتركيز الكامل على الكلمات.">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,7 +14,7 @@
   <!-- Stylesheet -->
   <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
+<body class="focus-mode-active">
 
   <!-- Academy Header -->
   <header class="academy-header">
@@ -34,9 +34,9 @@
       <div class="brand-titles">
         <h1>
           <span>TypeMaster Academy</span>
-          <span class="brand-badge">EduEdition v4.0</span>
+          <span class="brand-badge">SmartFocus v5.0</span>
         </h1>
-        <p>أكاديمية تعليم الطباعة باللمس وفق مراحل تدريبية ومنهجية قياس الأصابع</p>
+        <p>أكاديمية تعليم الطباعة باللمس بنظام التركيز البصري على الكلمات والرادار التكيفي</p>
       </div>
     </div>
 
@@ -49,7 +49,7 @@
           <line x1="8" y1="2" x2="8" y2="18"></line>
           <line x1="16" y1="6" x2="16" y2="22"></line>
         </svg>
-        <span>الخطة التدريبية والتطويرية</span>
+        <span>الخطة التدريبية</span>
       </button>
 
       <!-- Dark Mode Toggle -->
@@ -94,7 +94,37 @@
   <!-- Main Typing Arena -->
   <main class="typing-arena">
 
-    <!-- Pedagogical Stage Objective & Active Finger Guidance Card -->
+    <!-- Smart Focus & Training Mode Selector Bar -->
+    <section class="smart-mode-selector-bar">
+      <div class="smart-mode-left">
+        <span style="font-size:12px; font-weight:800; color:var(--text-muted);">نمط التدريب:</span>
+        <div class="mode-control-group">
+          <button class="btn-mode-tab active" id="btn-mode-focus" title="إخفاء اللوحة السفلية وتثبيت العين على الكلمات مع شارة الأصبع العائمة مباشرة فوق الحرف">
+            <span>🎯 وضع التركيز الذكي (مُوصى به)</span>
+          </button>
+          <button class="btn-mode-tab" id="btn-mode-full" title="إظهار رسم اليدين والكيبورد بالأسفل للمبتدئين">
+            <span>🖐️ وضع المرشد الكامل</span>
+          </button>
+          <button class="btn-mode-tab" id="btn-mode-blind" title="إخفاء حروف الكيبورد لتعويدك على الطباعة الغريزية دون النظر">
+            <span>🙈 وضع التعمية (Touch Master)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Weakness Radar -->
+      <div class="weakness-radar-widget">
+        <span style="font-size:11px; font-weight:700; color:var(--text-dim);">رادار الضعف:</span>
+        <div id="weak-keys-container" style="display:flex; gap:4px;">
+          <span style="font-size:11px; color:var(--text-dim);">جاري تحليل دقتك...</span>
+        </div>
+        <button class="btn-adaptive-drill" id="btn-trigger-adaptive" title="توليد تمرين ذكي فوري يركز على الحروف الأكثر تعثراً في أدائك">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
+          <span>توليد تدريب ذكي لنقاط ضعفي</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Pedagogical Stage Info Card -->
     <section class="stage-info-card" id="stage-info-card">
       <div class="stage-meta-header">
         <div class="stage-badge-box">
@@ -123,21 +153,6 @@
 
       <div class="stage-objective-desc" id="stage-objective-desc">
         <strong>الهدف التدريبي:</strong> تثبيت السبابتين على نتوءي (ت) و (ب)، وطباعة الحروف المحورية (ك، م، ن، ت | ب، ي، س، ش) دون النظر للوحة.
-      </div>
-
-      <!-- Live Active Finger Prompt Banner -->
-      <div class="finger-live-indicator-banner">
-        <div class="finger-prompt-left">
-          <span class="finger-prompt-label">الأصبع المطلوب حالياً:</span>
-          <div class="active-finger-chip" id="chip-active-finger">
-            <span class="chip-finger-dot" id="chip-finger-dot"></span>
-            <span class="chip-finger-name" id="chip-finger-name">السبابة اليمنى</span>
-          </div>
-          <span class="finger-target-key-chip">المفتاح: <strong id="chip-key-char">ت</strong></span>
-        </div>
-        <div class="finger-posture-tip" id="finger-posture-tip">
-          💡 تلميح: انظر إلى الشاشة وثبت المعصمين برفق
-        </div>
       </div>
     </section>
 
@@ -234,14 +249,14 @@
         </div>
       </div>
 
-      <!-- Text Display Box -->
+      <!-- Text Display Box (With Word Chunking & Inline Floating Finger Caret) -->
       <div class="text-display-box" id="text-display-box" tabindex="0">
-        <!-- Character spans injected via JavaScript -->
+        <!-- Word tokens & character spans with floating caret injected via JS -->
       </div>
     </section>
 
-    <!-- Visual Interactive Hands Section (تحديد الأصابع العشرة حياً) -->
-    <section class="visual-hands-section">
+    <!-- Visual Interactive Hands Section (Hidden in Smart Focus Mode, visible in Full Guide) -->
+    <section class="visual-hands-section" id="visual-hands-section">
       <div class="visual-hands-header">
         <div style="display:flex; align-items:center; gap:8px;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5">
@@ -258,41 +273,35 @@
       <!-- Vector Interactive Hands SVG -->
       <div class="hands-svg-container">
         <svg class="hands-svg" viewBox="0 0 680 170" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- LEFT HAND (اليد اليسرى) -->
+          <!-- LEFT HAND -->
           <g id="hand-left" class="hand-group">
-            <!-- Left Palm Base -->
             <path d="M70 120 C70 95, 230 95, 230 120 C230 150, 70 150, 70 120 Z" class="palm-base" />
             <text x="150" y="145" text-anchor="middle" class="hand-label">اليد اليسرى (Left Hand)</text>
 
-            <!-- L-Pinky (الخنصر الأيسر) -->
             <g id="finger-l-pinky" class="hand-finger" data-finger="l-pinky">
               <rect x="75" y="45" width="26" height="60" rx="13" class="finger-capsule" style="--zone-color:var(--finger-pinky);" />
               <circle cx="88" cy="55" r="7" class="finger-tip-dot" />
               <text x="88" y="90" text-anchor="middle" class="finger-name-tag">خنصر</text>
             </g>
 
-            <!-- L-Ring (البنصر الأيسر) -->
             <g id="finger-l-ring" class="hand-finger" data-finger="l-ring">
               <rect x="110" y="25" width="26" height="80" rx="13" class="finger-capsule" style="--zone-color:var(--finger-ring);" />
               <circle cx="123" cy="35" r="7" class="finger-tip-dot" />
               <text x="123" y="85" text-anchor="middle" class="finger-name-tag">بنصر</text>
             </g>
 
-            <!-- L-Middle (الوسطى اليسرى) -->
             <g id="finger-l-middle" class="hand-finger" data-finger="l-middle">
               <rect x="145" y="12" width="26" height="95" rx="13" class="finger-capsule" style="--zone-color:var(--finger-middle);" />
               <circle cx="158" cy="22" r="7" class="finger-tip-dot" />
               <text x="158" y="80" text-anchor="middle" class="finger-name-tag">وسطى</text>
             </g>
 
-            <!-- L-Index (السبابة اليسرى) -->
             <g id="finger-l-index" class="hand-finger" data-finger="l-index">
               <rect x="180" y="25" width="26" height="80" rx="13" class="finger-capsule" style="--zone-color:var(--finger-index);" />
               <circle cx="193" cy="35" r="7" class="finger-tip-dot" />
               <text x="193" y="85" text-anchor="middle" class="finger-name-tag">سبابة (ب)</text>
             </g>
 
-            <!-- L-Thumb (الإبهام الأيسر) -->
             <g id="finger-l-thumb" class="hand-finger" data-finger="l-thumb">
               <rect x="220" y="65" width="28" height="52" rx="14" class="finger-capsule" style="--zone-color:var(--finger-thumb);" />
               <circle cx="234" cy="76" r="7" class="finger-tip-dot" />
@@ -300,41 +309,35 @@
             </g>
           </g>
 
-          <!-- RIGHT HAND (اليد اليمنى) -->
+          <!-- RIGHT HAND -->
           <g id="hand-right" class="hand-group">
-            <!-- Right Palm Base -->
             <path d="M450 120 C450 95, 610 95, 610 120 C610 150, 450 150, 450 120 Z" class="palm-base" />
             <text x="530" y="145" text-anchor="middle" class="hand-label">اليد اليمنى (Right Hand)</text>
 
-            <!-- R-Thumb (الإبهام الأيمن) -->
             <g id="finger-r-thumb" class="hand-finger" data-finger="r-thumb">
               <rect x="432" y="65" width="28" height="52" rx="14" class="finger-capsule" style="--zone-color:var(--finger-thumb);" />
               <circle cx="446" cy="76" r="7" class="finger-tip-dot" />
               <text x="446" y="105" text-anchor="middle" class="finger-name-tag">إبهام</text>
             </g>
 
-            <!-- R-Index (السبابة اليمنى) -->
             <g id="finger-r-index" class="hand-finger" data-finger="r-index">
               <rect x="474" y="25" width="26" height="80" rx="13" class="finger-capsule" style="--zone-color:var(--finger-index);" />
               <circle cx="487" cy="35" r="7" class="finger-tip-dot" />
               <text x="487" y="85" text-anchor="middle" class="finger-name-tag">سبابة (ت)</text>
             </g>
 
-            <!-- R-Middle (الوسطى اليمنى) -->
             <g id="finger-r-middle" class="hand-finger" data-finger="r-middle">
               <rect x="509" y="12" width="26" height="95" rx="13" class="finger-capsule" style="--zone-color:var(--finger-middle);" />
               <circle cx="522" cy="22" r="7" class="finger-tip-dot" />
               <text x="522" y="80" text-anchor="middle" class="finger-name-tag">وسطى</text>
             </g>
 
-            <!-- R-Ring (البنصر الأيمن) -->
             <g id="finger-r-ring" class="hand-finger" data-finger="r-ring">
               <rect x="544" y="25" width="26" height="80" rx="13" class="finger-capsule" style="--zone-color:var(--finger-ring);" />
               <circle cx="557" cy="35" r="7" class="finger-tip-dot" />
               <text x="557" y="85" text-anchor="middle" class="finger-name-tag">بنصر</text>
             </g>
 
-            <!-- R-Pinky (الخنصر الأيمن) -->
             <g id="finger-r-pinky" class="hand-finger" data-finger="r-pinky">
               <rect x="579" y="45" width="26" height="60" rx="13" class="finger-capsule" style="--zone-color:var(--finger-pinky);" />
               <circle cx="592" cy="55" r="7" class="finger-tip-dot" />
@@ -345,8 +348,8 @@
       </div>
     </section>
 
-    <!-- Virtual Tactile Keyboard Section -->
-    <section class="keyboard-section">
+    <!-- Virtual Tactile Keyboard Section (Hidden in Smart Focus Mode, visible in Full Guide) -->
+    <section class="keyboard-section" id="keyboard-section">
       <div class="keyboard-toolbar">
         <div class="keyboard-badge-box">
           <span class="kbd-badge" id="kbd-status-badge">
@@ -360,7 +363,7 @@
         </div>
       </div>
 
-      <!-- Keyboard Wrapper (Strictly Arabic or English via data-keyboard-lang) -->
+      <!-- Keyboard Wrapper -->
       <div class="virtual-keyboard-wrapper" id="virtual-keyboard" data-keyboard-lang="ar">
         
         <!-- Row 1: Numbers & Symbols -->
@@ -381,7 +384,7 @@
           <div class="key-cap key-backspace" data-code="Backspace"><span class="key-char-ar">تراجع ⌫</span><span class="key-char-en">Backspace ⌫</span></div>
         </div>
 
-        <!-- Row 2: Top Row (ض ص ث ق ف غ ع ه خ ح ج د / QWERTYUIOP[]) -->
+        <!-- Row 2: Top Row -->
         <div class="keyboard-row">
           <div class="key-cap key-tab" data-code="Tab"><span class="key-char-ar">تبويب ⇥</span><span class="key-char-en">Tab ⇥</span></div>
           <div class="key-cap key-finger-pinky" data-code="KeyQ"><span class="key-char-ar">ض</span><span class="key-char-en">Q</span></div>
@@ -398,7 +401,7 @@
           <div class="key-cap key-finger-pinky" data-code="BracketRight"><span class="key-char-ar">د</span><span class="key-char-en">]</span></div>
         </div>
 
-        <!-- Row 3: Home Row (ش س ي ب ل ا ت ن م ك ط / ASDFGHJKL;') -->
+        <!-- Row 3: Home Row -->
         <div class="keyboard-row">
           <div class="key-cap key-caps" data-code="CapsLock"><span class="key-char-ar">حروف كبرى</span><span class="key-char-en">Caps</span></div>
           <div class="key-cap key-finger-pinky" data-code="KeyA"><span class="key-char-ar">ش</span><span class="key-char-en">A</span></div>
@@ -415,7 +418,7 @@
           <div class="key-cap key-enter" data-code="Enter"><span class="key-char-ar">إدخال ↵</span><span class="key-char-en">Enter ↵</span></div>
         </div>
 
-        <!-- Row 4: Bottom Row (ئ ء ؤ ر لا ى ة و ز ظ / ZXCVBNM,./) -->
+        <!-- Row 4: Bottom Row -->
         <div class="keyboard-row">
           <div class="key-cap key-shift" data-code="ShiftLeft"><span class="key-char-ar">تبديل ⇧</span><span class="key-char-en">Shift ⇧</span></div>
           <div class="key-cap key-finger-pinky" data-code="KeyZ"><span class="key-char-ar">ئ</span><span class="key-char-en">Z</span></div>
@@ -443,7 +446,7 @@
 
   </main>
 
-  <!-- Training & Developmental Plan Modal (الخطة التدريبية والتطويرية) -->
+  <!-- Training & Developmental Plan Modal -->
   <div class="modal-overlay" id="modal-roadmap">
     <div class="modal-card roadmap-modal-card">
       <div class="modal-header-row">
@@ -474,7 +477,7 @@
         <ul style="font-size:12px; line-height:1.7; color:var(--text-muted); padding-right:18px;">
           <li><strong>استقامة الظهر:</strong> اجلس معتدلاً بزاوية 90 درجة مع راحة القدمين على الأرض.</li>
           <li><strong>ثبات المعصمين:</strong> لا تضغط بمعصميك بقوة على الطاولة، دعهما يطفوان بمرونة فوق اللوحة.</li>
-          <li><strong>عدم النظر للوحة:</strong> ثق بذاكرتك العضلية وبإرشادات شاشة المرشد البصري للأصابع.</li>
+          <li><strong>تركيز العينين على الشاشة:</strong> ثق بالشارة العائمة فوق الحرف ولا تنظر لأسفل اللوحة إطلاقاً.</li>
         </ul>
       </div>
     </div>

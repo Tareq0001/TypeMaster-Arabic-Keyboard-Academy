@@ -1,8 +1,12 @@
 /**
- * TypeMaster Academy | Main Educational Controller & Stage Coordinator
- * =====================================================================
- * Coordinates 6-Stage Curriculum, Visual Hands Real-Time Tracker,
- * Countdown Timer, Developmental Roadmap, and Strict Keyboard Layouts.
+ * TypeMaster Academy | Main Educational Controller & Smart Focus Orchestrator
+ * ===========================================================================
+ * Features:
+ * - Smart Focus Mode (Zero visual distraction, 100% eyes on words)
+ * - Inline Floating Caret Finger HUD (travels with cursor above target letter)
+ * - Intelligent Word-Chunking Typography
+ * - Real-time Weakness Radar & Adaptive Practice Generator
+ * - 6-Stage Pedagogical Curriculum with Countdown Timers
  * 
  * Author: Tareq Ali (@Tareq0001)
  */
@@ -12,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentTrack = 'ar'; // 'ar' or 'en'
   let currentStageKey = 'stage_ar_1';
   let currentExerciseIndex = 0;
+  let currentMode = 'focus'; // 'focus', 'full', 'blind'
 
   // DOM Elements - Stage Header
   const stageNumBadge = document.getElementById('stage-num-badge');
@@ -21,10 +26,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const stageTargetAcc = document.getElementById('stage-target-acc');
   const stageObjectiveDesc = document.getElementById('stage-objective-desc');
 
-  // DOM Elements - Active Finger Banner
-  const chipFingerDot = document.getElementById('chip-finger-dot');
-  const chipFingerName = document.getElementById('chip-finger-name');
-  const chipKeyChar = document.getElementById('chip-key-char');
+  // DOM Elements - Mode Controls
+  const btnModeFocus = document.getElementById('btn-mode-focus');
+  const btnModeFull = document.getElementById('btn-mode-full');
+  const btnModeBlind = document.getElementById('btn-mode-blind');
+
+  // Weakness Radar Elements
+  const weakKeysContainer = document.getElementById('weak-keys-container');
+  const btnTriggerAdaptive = document.getElementById('btn-trigger-adaptive');
 
   // DOM Elements - HUD
   const hudWpm = document.getElementById('hud-wpm');
@@ -92,7 +101,38 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================================
-  // 1. THEME ENGINE (DARK / LIGHT MODE)
+  // 1. SMART TRAINING MODES (FOCUS / FULL / BLINDFOLD)
+  // ==========================================================
+  function setTrainingMode(mode) {
+    currentMode = mode;
+    document.body.classList.remove('focus-mode-active', 'blindfold-mode-active');
+    [btnModeFocus, btnModeFull, btnModeBlind].forEach(btn => {
+      if (btn) btn.classList.remove('active');
+    });
+
+    if (mode === 'focus') {
+      document.body.classList.add('focus-mode-active');
+      if (btnModeFocus) btnModeFocus.classList.add('active');
+      showToast('🎯 وضع التركيز الذكي: عينك على الكلمات فقط مع الشارة العائمة!');
+    } else if (mode === 'blind') {
+      document.body.classList.add('blindfold-mode-active');
+      if (btnModeBlind) btnModeBlind.classList.add('active');
+      showToast('🙈 وضع التعمية: حروف اللوحة مخفية لتثبيت الذاكرة العضلية!');
+    } else {
+      if (btnModeFull) btnModeFull.classList.add('active');
+      showToast('🖐️ وضع المرشد الكامل: عرض اليدين واللوحة');
+    }
+
+    renderTextSpans();
+    if (textDisplayBox) textDisplayBox.focus();
+  }
+
+  if (btnModeFocus) btnModeFocus.addEventListener('click', () => setTrainingMode('focus'));
+  if (btnModeFull) btnModeFull.addEventListener('click', () => setTrainingMode('full'));
+  if (btnModeBlind) btnModeBlind.addEventListener('click', () => setTrainingMode('blind'));
+
+  // ==========================================================
+  // 2. THEME ENGINE (DARK / LIGHT MODE)
   // ==========================================================
   function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
@@ -124,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================================
-  // 2. DEDICATED KEYBOARD MODE
+  // 3. DEDICATED KEYBOARD MODE
   // ==========================================================
   function setKeyboardLanguage(lang) {
     if (!virtualKeyboard) return;
@@ -160,15 +200,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================================
-  // 3. VISUAL HANDS ENGINE (تحديد الأصابع العشرة حياً)
+  // 4. VISUAL HANDS UPDATE (For Full Guide mode)
   // ==========================================================
   function updateVisualHands(finger) {
-    // Clear previously highlighted fingers on SVG
     document.querySelectorAll('.hand-finger').forEach(el => el.classList.remove('active-finger'));
-
     if (!finger) return;
 
-    // Highlight matching SVG elements
     if (finger.id === 'thumb') {
       const lThumb = document.getElementById('finger-l-thumb');
       const rThumb = document.getElementById('finger-r-thumb');
@@ -178,24 +215,115 @@ document.addEventListener('DOMContentLoaded', () => {
       const targetFingerEl = document.getElementById(`finger-${finger.id}`);
       if (targetFingerEl) targetFingerEl.classList.add('active-finger');
     }
-
-    // Update Banner Chip
-    if (chipFingerName) {
-      chipFingerName.textContent = currentTrack === 'ar' ? finger.nameAr : finger.nameEn;
-    }
-    if (chipFingerDot) {
-      chipFingerDot.style.background = finger.color || 'var(--emerald)';
-    }
-
-    // Update target character chip
-    if (chipKeyChar && engine.text && engine.currentIndex < engine.text.length) {
-      const char = engine.text[engine.currentIndex];
-      chipKeyChar.textContent = char === ' ' ? (currentTrack === 'ar' ? 'مسافة' : 'Space') : char;
-    }
   }
 
   // ==========================================================
-  // 4. TYPING ENGINE UI INTEGRATION
+  // 5. WORD CHUNKING & INLINE FLOATING CARET HUD
+  // ==========================================================
+  function renderTextSpans() {
+    if (!textDisplayBox) return;
+    textDisplayBox.innerHTML = '';
+
+    const text = engine.text;
+    if (!text) return;
+
+    // Tokenize text into words with preserved spaces
+    let globalCharIndex = 0;
+    const words = text.split(' ');
+
+    words.forEach((wordText, wordIdx) => {
+      const wordContainer = document.createElement('span');
+      wordContainer.className = 'word-token';
+
+      const wordStartIndex = globalCharIndex;
+      const wordEndIndex = globalCharIndex + wordText.length;
+
+      // Determine word status
+      if (engine.currentIndex >= wordStartIndex && engine.currentIndex < wordEndIndex) {
+        wordContainer.classList.add('word-current');
+      } else if (engine.currentIndex >= wordEndIndex) {
+        wordContainer.classList.add('word-completed');
+      } else {
+        wordContainer.classList.add('word-upcoming');
+      }
+
+      // Render individual characters of the word
+      for (let i = 0; i < wordText.length; i++) {
+        const char = wordText[i];
+        const span = document.createElement('span');
+        span.className = 'char-span';
+        span.textContent = char;
+
+        const charAbsoluteIndex = wordStartIndex + i;
+
+        if (charAbsoluteIndex < engine.currentIndex) {
+          span.className += engine.charStates[charAbsoluteIndex] === 'correct' ? ' char-correct' : ' char-incorrect';
+        } else if (charAbsoluteIndex === engine.currentIndex) {
+          span.className += ' char-current';
+
+          // ATTACH THE FLOATING CARET HUD DIRECTLY ON THIS ACTIVE LETTER!
+          const caretEl = document.createElement('span');
+          caretEl.className = 'inline-finger-caret';
+          const finger = engine.currentFinger || { nameAr: 'السبابة', nameEn: 'Index', color: '#10b981' };
+          caretEl.style.setProperty('--caret-color', finger.color);
+
+          const dot = document.createElement('span');
+          dot.className = 'caret-dot';
+
+          const label = document.createElement('span');
+          label.textContent = currentTrack === 'ar' ? finger.nameAr : finger.nameEn;
+
+          caretEl.appendChild(dot);
+          caretEl.appendChild(label);
+          span.appendChild(caretEl);
+        } else {
+          span.className += ' char-pending';
+        }
+
+        wordContainer.appendChild(span);
+      }
+
+      textDisplayBox.appendChild(wordContainer);
+      globalCharIndex += wordText.length;
+
+      // Append Space token if not last word
+      if (wordIdx < words.length - 1) {
+        const spaceIndex = globalCharIndex;
+        const spaceSpan = document.createElement('span');
+        spaceSpan.className = 'char-span';
+        spaceSpan.innerHTML = '&nbsp;';
+
+        if (spaceIndex < engine.currentIndex) {
+          spaceSpan.className += engine.charStates[spaceIndex] === 'correct' ? ' char-correct' : ' char-incorrect';
+        } else if (spaceIndex === engine.currentIndex) {
+          spaceSpan.className += ' char-current';
+
+          // Floating caret for Space (Thumbs)
+          const caretEl = document.createElement('span');
+          caretEl.className = 'inline-finger-caret';
+          caretEl.style.setProperty('--caret-color', '#f59e0b');
+
+          const dot = document.createElement('span');
+          dot.className = 'caret-dot';
+
+          const label = document.createElement('span');
+          label.textContent = currentTrack === 'ar' ? 'الإبهام (مسافة)' : 'Thumbs (Space)';
+
+          caretEl.appendChild(dot);
+          caretEl.appendChild(label);
+          spaceSpan.appendChild(caretEl);
+        } else {
+          spaceSpan.className += ' char-pending';
+        }
+
+        textDisplayBox.appendChild(spaceSpan);
+        globalCharIndex += 1;
+      }
+    });
+  }
+
+  // ==========================================================
+  // 6. TYPING ENGINE UI INTEGRATION
   // ==========================================================
   const onUpdateUI = (metrics) => {
     // 1. HUD Metrics
@@ -223,10 +351,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (stageCompBar) stageCompBar.style.width = `${metrics.progressPercent}%`;
     if (stageCompText) stageCompText.textContent = `${metrics.progressPercent}%`;
 
-    // 4. Update Visual Hands & Finger Banner
+    // 4. Update Weakness Radar Chips
+    if (weakKeysContainer) {
+      if (metrics.weakKeys && metrics.weakKeys.length > 0) {
+        weakKeysContainer.innerHTML = metrics.weakKeys.map(w => 
+          `<span class="weakness-chip-tag" title="نسبة الدقة ${w.accuracy}%">${w.char} (${w.accuracy}%)</span>`
+        ).join('');
+      } else {
+        weakKeysContainer.innerHTML = `<span style="font-size:11px; color:var(--emerald); font-weight:700;">✨ أداؤك متزن ودقيق!</span>`;
+      }
+    }
+
+    // 5. Update Hands SVG (if visible in Full mode)
     updateVisualHands(metrics.finger);
 
-    // 5. Render Text Spans
+    // 6. Render Word Chunks and Floating Caret
     renderTextSpans();
   };
 
@@ -234,20 +373,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const stage = STAGES_DATABASE[currentStageKey];
     if (modalWpm) modalWpm.textContent = `${metrics.wpm} WPM`;
     if (modalAccuracy) modalAccuracy.textContent = `${metrics.accuracy}%`;
-    if (modalElapsedTime) modalElapsedTime.textContent = `${metrics.elapsedSeconds} ث / المستهدف: ${stage.timeLimitSeconds}ث`;
+    if (modalElapsedTime) modalElapsedTime.textContent = `${metrics.elapsedSeconds} ث / المستهدف: ${stage ? stage.timeLimitSeconds : 60}ث`;
     if (modalRating) modalRating.textContent = metrics.rating;
 
-    // Pedagogical evaluation
-    const passWpm = metrics.wpm >= stage.targetWpm;
-    const passAcc = metrics.accuracy >= stage.targetAccuracy;
+    const targetWpm = stage ? stage.targetWpm : 25;
+    const targetAcc = stage ? stage.targetAccuracy : 90;
+    const passWpm = metrics.wpm >= targetWpm;
+    const passAcc = metrics.accuracy >= targetAcc;
     let feedback = '';
 
     if (passWpm && passAcc) {
-      feedback = `🌟 إنجاز متميز! حققت معايير المرحلة بنجاح باهر (دقة ${metrics.accuracy}% وسرعة ${metrics.wpm} WPM). أنت جاهز تماماً للانتقال للمرحلة التالية.`;
+      feedback = `🌟 إنجاز متميز! حققت معايير المرحلة بنجاح باهر (دقة ${metrics.accuracy}% وسرعة ${metrics.wpm} WPM). حافظت على تركيز عينيك على الكلمات!`;
     } else if (passAcc) {
-      feedback = `👍 دقة أصابعك ممتازة (${metrics.accuracy}%)، ومع تكرار التمرين ستصل لسرعة ${stage.targetWpm} WPM المستهدفة بكل سهولة.`;
+      feedback = `👍 دقة أصابعك ممتازة (${metrics.accuracy}%)، ومع تكرار التركيز البصري ستصل لسرعة ${targetWpm} WPM المستهدفة بكل سهولة.`;
     } else {
-      feedback = `💡 رائع! استمر في تثبيت موضع الأصابع على صف الارتكاز والتركيز على الدقة أولاً ثم تأتي السرعة تلقائياً.`;
+      feedback = `💡 رائع! تذكر أن الشارة العائمة تتبع الحرف دائماً، لا تنظر للأسفل ودع الذاكرة العضلية تتطور طبيعياً.`;
     }
 
     if (pedagogicalFeedbackBox) pedagogicalFeedbackBox.textContent = feedback;
@@ -256,29 +396,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const engine = new TypingEngine(sound, onUpdateUI, onFinishLesson);
 
-  function renderTextSpans() {
-    if (!textDisplayBox) return;
-    textDisplayBox.innerHTML = '';
-
-    for (let i = 0; i < engine.text.length; i++) {
-      const span = document.createElement('span');
-      const char = engine.text[i];
-      span.textContent = char;
-
-      if (i < engine.currentIndex) {
-        span.className = engine.charStates[i] === 'correct' ? 'char-correct' : 'char-incorrect';
-      } else if (i === engine.currentIndex) {
-        span.className = 'char-current';
-      } else {
-        span.className = 'char-pending';
+  // Trigger Adaptive Drill Button
+  if (btnTriggerAdaptive) {
+    btnTriggerAdaptive.addEventListener('click', () => {
+      const drillText = engine.generateAdaptiveDrill(currentTrack);
+      if (stageNumBadge) stageNumBadge.textContent = '🧠 تدريب تكيفي ذكي';
+      if (stageTitleText) stageTitleText.textContent = 'تمرين ذكي مخصص لعلاج الحروف الأكثر تعثراً';
+      if (stageObjectiveDesc) {
+        stageObjectiveDesc.innerHTML = `<strong>الهدف الذكي:</strong> تم إنشاء هذا التدريب آلياً لمعالجة أخطائك المتكررة في الحروف؛ ركّز على الشارة العائمة فوق الحرف واكتب بهدوء وثبات.`;
       }
-
-      textDisplayBox.appendChild(span);
-    }
+      engine.loadLesson(drillText, 60);
+      renderTextSpans();
+      showToast('🧠 تم توليد تدريب ذكي مخصص لنقاط ضعفك!');
+    });
   }
 
   // ==========================================================
-  // 5. STAGES & EXERCISES CONTROLLER
+  // 7. STAGES & EXERCISES CONTROLLER
   // ==========================================================
   function renderStagePills() {
     if (!stagePillsContainer) return;
@@ -397,7 +531,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================================
-  // 6. ROADMAP MODAL (الخطة التدريبية والتطويرية)
+  // 8. ROADMAP MODAL
   // ==========================================================
   function renderRoadmapList() {
     if (!roadmapStagesList) return;
@@ -459,7 +593,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================================
-  // 7. KEYBOARD EVENT LISTENERS
+  // 9. KEYBOARD EVENT LISTENERS
   // ==========================================================
   window.addEventListener('keydown', (e) => {
     if (e.ctrlKey || e.altKey || e.metaKey) return;
@@ -505,10 +639,9 @@ document.addEventListener('DOMContentLoaded', () => {
     btnNextLesson.addEventListener('click', () => {
       if (modalOverlay) modalOverlay.classList.remove('show');
       const stage = STAGES_DATABASE[currentStageKey];
-      if (currentExerciseIndex < stage.lessons.length - 1) {
+      if (stage && currentExerciseIndex < stage.lessons.length - 1) {
         currentExerciseIndex++;
       } else {
-        // Move to next stage
         const stageKeys = Object.keys(STAGES_DATABASE).filter(k => STAGES_DATABASE[k].lang === currentTrack);
         const currIdx = stageKeys.indexOf(currentStageKey);
         if (currIdx < stageKeys.length - 1) {
@@ -561,4 +694,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial Load
   renderStagePills();
   loadCurrentStageExercise();
+  // Set default mode: focus mode
+  setTrainingMode('focus');
 });

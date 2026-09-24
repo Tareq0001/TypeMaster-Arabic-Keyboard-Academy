@@ -1,8 +1,8 @@
 /**
- * TypeMaster Academy | Core Typing Engine, Countdown Timer & Finger Tracker
- * ==========================================================================
+ * TypeMaster Academy | Core Typing Engine, Countdown Timer, Finger Tracker & Weakness Radar
+ * =========================================================================================
  * Real-time keystroke evaluation, WPM/CPM calculations, countdown timer,
- * finger ergonomic locator, and virtual keyboard key tracking.
+ * finger ergonomic locator, error telemetry per key, and adaptive drill generator.
  * 
  * Author: Tareq Ali (@Tareq0001)
  */
@@ -100,6 +100,9 @@ class TypingEngine {
     this.currentFinger = null;
     this.currentKeyCode = null;
 
+    // Key Telemetry for Adaptive Weakness Tracking
+    this.keyTelemetry = {}; // char -> { correct: 0, incorrect: 0 }
+
     // Character to Key code mapping
     this.charToKeyMap = {
       ' ': 'Space',
@@ -173,7 +176,6 @@ class TypingEngine {
         const metrics = this.getMetrics();
         if (metrics.remainingSeconds <= 0 && !this.isTimeExpired) {
           this.isTimeExpired = true;
-          // Warn or finish
         }
         if (this.onUpdateUI) this.onUpdateUI(metrics);
       }, 500);
@@ -182,14 +184,21 @@ class TypingEngine {
     this.totalKeystrokes++;
     const expectedChar = this.text[this.currentIndex];
 
+    // Track Key Telemetry
+    if (!this.keyTelemetry[expectedChar]) {
+      this.keyTelemetry[expectedChar] = { correct: 0, incorrect: 0 };
+    }
+
     if (charPressed === expectedChar) {
       // Correct keystroke
+      this.keyTelemetry[expectedChar].correct++;
       this.sound.playKeyClick();
       this.correctCount++;
       this.charStates[this.currentIndex] = 'correct';
       this.currentIndex++;
     } else {
       // Incorrect keystroke
+      this.keyTelemetry[expectedChar].incorrect++;
       this.sound.playErrorSound();
       this.incorrectCount++;
       this.charStates[this.currentIndex] = 'incorrect';
@@ -264,6 +273,7 @@ class TypingEngine {
       rating,
       finger: this.currentFinger,
       targetKey: this.currentKeyCode,
+      weakKeys: this.getWeakKeys(),
       isFinished: this.isFinished,
       isTimeExpired: this.isTimeExpired
     };
@@ -292,5 +302,63 @@ class TypingEngine {
 
   clearTargetKeyHighlight() {
     document.querySelectorAll('.key-cap.active-target').forEach(el => el.classList.remove('active-target'));
+  }
+
+  /**
+   * Identifies user's weakest keys (highest error rates)
+   */
+  getWeakKeys() {
+    const list = [];
+    for (const char in this.keyTelemetry) {
+      if (char === ' ') continue;
+      const stat = this.keyTelemetry[char];
+      const total = stat.correct + stat.incorrect;
+      if (total >= 2) {
+        const errorRate = stat.incorrect / total;
+        if (errorRate > 0.15 || stat.incorrect >= 2) {
+          list.push({
+            char,
+            accuracy: Math.round((stat.correct / total) * 100),
+            errors: stat.incorrect
+          });
+        }
+      }
+    }
+    list.sort((a, b) => b.errors - a.errors);
+    return list.slice(0, 4);
+  }
+
+  /**
+   * Generates intelligent adaptive drill focusing on weak keys
+   */
+  generateAdaptiveDrill(lang = 'ar') {
+    const weak = this.getWeakKeys();
+    const weakChars = weak.map(w => w.char);
+
+    if (lang === 'ar') {
+      const anchors = ['ت', 'ن', 'م', 'ك', 'ب', 'ي', 'س', 'ش'];
+      const targetKeys = weakChars.length > 0 ? weakChars : ['ص', 'ع', 'ق', 'غ'];
+      const drillWords = [];
+
+      for (let i = 0; i < 14; i++) {
+        const k = targetKeys[i % targetKeys.length];
+        const a1 = anchors[Math.floor(Math.random() * anchors.length)];
+        const a2 = anchors[Math.floor(Math.random() * anchors.length)];
+        drillWords.push(`${k}${a1}${k} ${a2}${k}${a1}`);
+      }
+      return drillWords.join(' ');
+    } else {
+      const anchors = ['a', 's', 'd', 'f', 'j', 'k', 'l'];
+      const targetKeys = weakChars.length > 0 ? weakChars : ['e', 'r', 'u', 'o'];
+      const drillWords = [];
+
+      for (let i = 0; i < 14; i++) {
+        const k = targetKeys[i % targetKeys.length];
+        const a1 = anchors[Math.floor(Math.random() * anchors.length)];
+        const a2 = anchors[Math.floor(Math.random() * anchors.length)];
+        drillWords.push(`${k}${a1}${k} ${a2}${k}${a1}`);
+      }
+      return drillWords.join(' ');
+    }
   }
 }
